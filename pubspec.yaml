@@ -29,6 +29,12 @@ flutter:
     - assets/images/tabbar/
     - assets/images/avator/
     - assets/images/bg/
+    - assets/images/game_galactic_hand/
+    - assets/images/game_nebula_rush/
+    - assets/images/game_stellar_gift/
+    - assets/images/game_frostflare/
+    - assets/images/game_starflare/
+    - assets/images/game_quest_roll/
 
   fonts:
     - family: Manrope
