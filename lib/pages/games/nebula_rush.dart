@@ -16,11 +16,12 @@ class NebulaRushState extends State<NebulaRush> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        color: Color(0xFF191919),
+        color: Color(0xFF212121),
         child: Column(
           children: [
             PageHeader(title: 'Nebula Rush'),
             ContentBox(),
+            
           ],
         ),
       ),

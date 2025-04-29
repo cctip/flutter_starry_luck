@@ -14,9 +14,9 @@ class PageHeaderState extends State<PageHeader> {
   Widget build(BuildContext context) {
     return Material(
       color: Color(0xFF191919),
-      child: SafeArea(child: Container(
-        height: 64,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        height: 64 + MediaQuery.of(context).padding.top,
+        padding: EdgeInsets.only(left: 16, right: 16, top: MediaQuery.of(context).padding.top),
         child: Row(
           children: [
             GestureDetector(
@@ -82,7 +82,7 @@ class PageHeaderState extends State<PageHeader> {
             )
           ],
         ),
-      ))
+      )
     );
   }
 }

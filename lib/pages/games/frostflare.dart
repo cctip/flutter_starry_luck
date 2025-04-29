@@ -28,6 +28,27 @@ class FrostflareState extends State<Frostflare> {
   }
 
   Widget ContentBox() {
-    return Container();
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 540,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/images/game_frostflare/bg.png'), fit: BoxFit.cover)
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Wrap(
+            spacing: 7,
+            runSpacing: 7,
+            children: List.generate(24, (index) => Container(
+              width: 118,
+              height: 48,
+              child: Image.asset('assets/images/game_frostflare/blind_box.png'),
+            )),
+          ),
+          SizedBox(height: 32)
+        ]
+      ),
+    );
   }
 }
