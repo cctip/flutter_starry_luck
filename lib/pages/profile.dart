@@ -1,8 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import '/controller/course.dart';
-import '/controller/sense.dart';
 import '/controller/user.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,12 +13,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class HomePageState extends State<ProfilePage> {
-  List get _readedList => CourseController.readedList.value == '' ? [] : CourseController.readedList.value.split(',');
 
   @override
   void initState() {
     super.initState();
-    SenseController.init();
   }
 
   @override
@@ -83,7 +79,6 @@ class HomePageState extends State<ProfilePage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(56)
                     ),
-                    child: Image.asset('assets/images/avator/avator_4.png'),
                   ),
                   SizedBox(width: 16),
                   Column(
@@ -144,7 +139,6 @@ class HomePageState extends State<ProfilePage> {
         SizedBox(height: 8),
         Row(
           children: [
-            Obx(() => DataItem(title: 'Lessons learned', count: _readedList.length)),
             SizedBox(width: 8),
             Obx(() => DataItem(title: 'Challenge', count: UserController.battleCount.value)),
             SizedBox(width: 8),

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import '/widget/page_header.dart';
-import '/controller/sense.dart';
 
 class BadgePage extends StatefulWidget {
   const BadgePage({super.key});
@@ -15,7 +14,6 @@ class BadgePageState extends State<BadgePage> {
   @override
   void initState() {
     super.initState();
-    SenseController.init();
   }
 
   @override

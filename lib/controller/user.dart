@@ -1,4 +1,3 @@
-import '/controller/ranking.dart';
 import 'package:intl/intl.dart';
 import '/common/share_pref.dart';
 import 'package:get/get.dart';
@@ -52,8 +51,6 @@ class UserController extends GetxController {
     }
     SharePref.setInt('xp', xp.value);
     SharePref.setInt('xpAll', xpAll.value);
-
-    RankingController.init();
   }
 
   static onBattle() {

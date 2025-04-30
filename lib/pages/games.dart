@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import '/widget/page_header.dart';
-import '/controller/sense.dart';
 
 class GamesPage extends StatefulWidget {
   const GamesPage({super.key});
@@ -15,7 +14,6 @@ class GamesPageState extends State<GamesPage> {
   @override
   void initState() {
     super.initState();
-    SenseController.init();
   }
 
   @override

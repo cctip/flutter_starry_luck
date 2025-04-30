@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '/widget/page_header.dart';
-import '/controller/sense.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +15,6 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    SenseController.init();
   }
 
   @override
@@ -42,7 +40,7 @@ class HomePageState extends State<HomePage> {
             children: [
               Image.asset('assets/images/bg/subtitle_top.png', height: 20),
               SizedBox(height: 10),
-              Image.asset('assets/images/bg/game_galactic_hand.png'),
+              GameItem('galactic_hand', width: MediaQuery.of(context).size.width),
               SizedBox(height: 20),
               Image.asset('assets/images/bg/subtitle_hot.png', height: 20),
               SizedBox(height: 10),
@@ -72,10 +70,10 @@ class HomePageState extends State<HomePage> {
       )
     ]));
   }
-  Widget GameItem(name) {
+  Widget GameItem(name, { width }) {
     return GestureDetector(
       onTap: () => Get.toNamed('/$name'),
-      child: Image.asset('assets/images/bg/game_$name.png', width: 112)
+      child: Image.asset('assets/images/bg/game_$name.png', width: (width ?? 112) / 1)
     );
   }
 }
