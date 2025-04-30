@@ -19,7 +19,7 @@ class StellarGiftState extends State<StellarGift> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Stellar Gift'),
+            PageHeader(title: 'Stellar Gift', rule: 'stellar_gift'),
             ContentBox(),
             DataBox()
           ],

@@ -19,7 +19,7 @@ class StarflareState extends State<Starflare> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Starflare'),
+            PageHeader(title: 'Starflare', rule: 'starflare'),
             ContentBox(),
           ],
         ),

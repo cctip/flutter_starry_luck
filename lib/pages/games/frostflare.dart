@@ -19,7 +19,7 @@ class FrostflareState extends State<Frostflare> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Frostflare'),
+            PageHeader(title: 'Frostflare', rule: 'frostflare'),
             ContentBox(),
           ],
         ),

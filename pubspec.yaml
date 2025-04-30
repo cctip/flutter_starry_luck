@@ -13,6 +13,7 @@ dependencies:
   url_launcher: ^6.3.1
   intl: ^0.20.2
   shared_preferences: ^2.1.1
+  animate_do: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +30,7 @@ flutter:
     - assets/images/tabbar/
     - assets/images/avator/
     - assets/images/bg/
+    - assets/images/rules/
     - assets/images/game_galactic_hand/
     - assets/images/game_nebula_rush/
     - assets/images/game_stellar_gift/

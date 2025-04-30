@@ -19,7 +19,7 @@ class NebulaRushState extends State<NebulaRush> {
         color: Color(0xFF212121),
         child: Column(
           children: [
-            PageHeader(title: 'Nebula Rush'),
+            PageHeader(title: 'Nebula Rush', rule: 'nebula_rush'),
             ContentBox(),
             
           ],

@@ -19,7 +19,7 @@ class QuestRollState extends State<QuestRoll> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Quest Roll'),
+            PageHeader(title: 'Quest Roll', rule: 'quest_roll'),
             ContentBox(),
           ],
         ),

@@ -2,14 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PageHeader extends StatefulWidget {
-  const PageHeader({super.key, required this.title});
+  const PageHeader({super.key, required this.title, required this.rule});
   final String title;
+  final String rule;
 
   @override
   State<PageHeader> createState() => PageHeaderState();
 }
 
 class PageHeaderState extends State<PageHeader> {
+  // 规则
+  _showRule() {
+    showDialog(
+      context: context,
+      useSafeArea: false,
+      builder: (_) => Container(
+        alignment: Alignment.bottomCenter,
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 32),
+            decoration: BoxDecoration(
+              color: Color(0xFF212121)
+            ),
+            child: Column(
+              children: [
+                Image.asset('assets/images/rules/slider.png'),
+                Image.asset('assets/images/rules/${widget.rule}.png'),
+              ],
+            ),
+          ),
+        ),
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -26,7 +52,10 @@ class PageHeaderState extends State<PageHeader> {
             SizedBox(width: 8),
             Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
             SizedBox(width: 8),
-            Image.asset('assets/icons/icon_info.png', width: 16),
+            GestureDetector(
+              onTap: _showRule,
+              child: Image.asset('assets/icons/icon_info.png', width: 16),
+            ),
             Spacer(),
             Container(
               height: 32,
