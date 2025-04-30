@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '/common/eventbus.dart';
 import '/controller/user.dart';
 import './home.dart';
+import './games.dart';
+import './bgdge.dart';
+import './profile.dart';
 
 
 class IndexPage extends StatefulWidget {
@@ -42,6 +45,9 @@ class IndexPageState extends State<IndexPage> {
             index: currentIndex,
             children: [
               HomePage(),
+              GamesPage(),
+              BadgePage(),
+              ProfilePage()
             ],
           ),
           TabbarBox()
@@ -52,12 +58,11 @@ class IndexPageState extends State<IndexPage> {
 
   Widget TabbarBox() {
     return Positioned(child: Container(
-      height: 58 + MediaQuery.of(context).padding.bottom,
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom, left: 12, right: 12),
+      height: 64 + MediaQuery.of(context).padding.bottom,
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
+        color: Color(0xFF191919),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -75,9 +80,8 @@ class IndexPageState extends State<IndexPage> {
     return GestureDetector(
       onTap: () => onTabChanged(index),
       child: Container(
-        width: (MediaQuery.of(context).size.width - 24) / 4,
-        height: 58,
-        color: Colors.white,
+        width: MediaQuery.of(context).size.width / 4,
+        color: Colors.transparent,
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +89,7 @@ class IndexPageState extends State<IndexPage> {
           children: [
             Image.asset('assets/images/tabbar/$icon${currentIndex == index ? '_ac' : ''}.png', width: 24),
             SizedBox(height: 4),
-            Text('$text', style: TextStyle(color: Color(currentIndex == index ? 0xFF282B32 : 0xFFA2A6AF), fontSize: 12, fontWeight: FontWeight.w500))
+            Text('$text', style: TextStyle(color: currentIndex == index ? Color(0xFFFFAA1C) : Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
       ),

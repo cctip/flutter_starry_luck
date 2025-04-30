@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '/widget/page_header.dart';
+import '/widget/detail_header.dart';
 
 class Starflare extends StatefulWidget {
   const Starflare({super.key});
@@ -19,7 +18,7 @@ class StarflareState extends State<Starflare> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Starflare', rule: 'starflare'),
+            DetailHeader(title: 'Starflare', rule: 'starflare'),
             ContentBox(),
           ],
         ),

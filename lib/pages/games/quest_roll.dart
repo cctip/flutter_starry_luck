@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '/widget/page_header.dart';
+import '/widget/detail_header.dart';
 
 class QuestRoll extends StatefulWidget {
   const QuestRoll({super.key});
@@ -19,7 +18,7 @@ class QuestRollState extends State<QuestRoll> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Quest Roll', rule: 'quest_roll'),
+            DetailHeader(title: 'Quest Roll', rule: 'quest_roll'),
             ContentBox(),
           ],
         ),

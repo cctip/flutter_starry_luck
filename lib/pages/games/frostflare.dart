@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '/widget/page_header.dart';
+import '/widget/detail_header.dart';
 
 class Frostflare extends StatefulWidget {
   const Frostflare({super.key});
@@ -19,7 +18,7 @@ class FrostflareState extends State<Frostflare> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Frostflare', rule: 'frostflare'),
+            DetailHeader(title: 'Frostflare', rule: 'frostflare'),
             ContentBox(),
           ],
         ),

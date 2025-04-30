@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '/widget/page_header.dart';
+import '/widget/detail_header.dart';
 
 class NebulaRush extends StatefulWidget {
   const NebulaRush({super.key});
@@ -19,7 +18,7 @@ class NebulaRushState extends State<NebulaRush> {
         color: Color(0xFF212121),
         child: Column(
           children: [
-            PageHeader(title: 'Nebula Rush', rule: 'nebula_rush'),
+            DetailHeader(title: 'Nebula Rush', rule: 'nebula_rush'),
             ContentBox(),
             
           ],

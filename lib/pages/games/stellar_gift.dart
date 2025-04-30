@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '/widget/page_header.dart';
+import '/widget/detail_header.dart';
 
 class StellarGift extends StatefulWidget {
   const StellarGift({super.key});
@@ -19,7 +18,7 @@ class StellarGiftState extends State<StellarGift> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Stellar Gift', rule: 'stellar_gift'),
+            DetailHeader(title: 'Stellar Gift', rule: 'stellar_gift'),
             ContentBox(),
             DataBox()
           ],

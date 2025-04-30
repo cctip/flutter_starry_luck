@@ -5,8 +5,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
 import '/widget/primary_btn.dart';
-import '/widget/page_header.dart';
 import 'package:animate_do/animate_do.dart';
+import '/widget/detail_header.dart';
 
 class GalacticHand extends StatefulWidget {
   const GalacticHand({super.key});
@@ -161,7 +161,7 @@ class GalacticHandState extends State<GalacticHand> {
         color: Color(0xFF191919),
         child: Column(
           children: [
-            PageHeader(title: 'Galactic Hand', rule: 'galactic_hand'),
+            DetailHeader(title: 'Galactic Hand', rule: 'galactic_hand'),
             ContentBox(),
             GuessBox()
           ],

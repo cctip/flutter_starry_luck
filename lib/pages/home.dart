@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '/widget/page_header.dart';
 import '/controller/sense.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,19 +22,13 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFF1F5F9),
+      color: Color(0xFF212121),
       child: Column(
         children: [
-          HeaderBox(),
+          PageHeader(),
           ContentBox()
         ],
       ),
-    );
-  }
-
-  Widget HeaderBox() {
-    return Container(
-      height: 100,
     );
   }
 
@@ -45,76 +40,42 @@ class HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/galactic_hand');
-                },
-                child: Text('Galactic Hand', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/nebula_rush');
-                },
-                child: Text('Nebula Rush', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/stellar_gift');
-                },
-                child: Text('Stellar Gift', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/frostflare');
-                },
-                child: Text('Frostflare', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/starflare');
-                },
-                child: Text('Starflare', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF15171C),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  Get.toNamed('/quest_roll');
-                },
-                child: Text('Quest Roll', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))
+              Image.asset('assets/images/bg/subtitle_top.png', height: 20),
+              SizedBox(height: 10),
+              Image.asset('assets/images/bg/game_galactic_hand.png'),
+              SizedBox(height: 20),
+              Image.asset('assets/images/bg/subtitle_hot.png', height: 20),
+              SizedBox(height: 10),
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                      child: Wrap(
+                        spacing: 10,
+                        children: [
+                          GameItem('nebula_rush'),
+                          GameItem('stellar_gift'),
+                          GameItem('frostflare'),
+                          GameItem('starflare'),
+                          GameItem('quest_roll'),
+                        ],
+                      )
+                    )
+                  );
+                }
               ),
             ]
           ),
         ),
       )
     ]));
+  }
+  Widget GameItem(name) {
+    return GestureDetector(
+      onTap: () => Get.toNamed('/$name'),
+      child: Image.asset('assets/images/bg/game_$name.png', width: 112)
+    );
   }
 }
