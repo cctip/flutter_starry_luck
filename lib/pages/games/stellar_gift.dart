@@ -1,6 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:math';
+
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import '/widget/detail_header.dart';
 
 class StellarGift extends StatefulWidget {
@@ -11,6 +15,36 @@ class StellarGift extends StatefulWidget {
 }
 
 class StellarGiftState extends State<StellarGift> {
+  bool _start = false;
+  final List _openedList = [];
+  final List _openedBalls = [];
+  int _comboCount = 0;
+  bool _openBlack = false;
+
+  // 开始游戏
+  _onStart() {
+    setState(() {
+      _start = true;
+    });
+  }
+
+  // 打开盲盒
+  _onOpen(index) {
+    if (!_start || _openedList.contains(index) || _openBlack) return;
+    setState(() {
+      _openedList.add(index);
+      int type = Random().nextInt(2);
+      if (type != 0) {
+        _comboCount++;
+      }
+      _openedBalls.add(type);
+      _openBlack = type == 0;
+    });
+  }
+
+  // 领取奖励
+  _onClaim() {}
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -35,20 +69,53 @@ class StellarGiftState extends State<StellarGift> {
       decoration: BoxDecoration(
         image: DecorationImage(image: AssetImage('assets/images/game_stellar_gift/bg.png'), fit: BoxFit.cover)
       ),
-      child: Column(children: [
-        Image.asset('assets/images/game_stellar_gift/cambo_border.png', height: 59),
-        SizedBox(height: 16),
-        Wrap(
-          spacing: 7,
-          runSpacing: 7,
-          children: List.generate(25, (index) => Container(
-            width: 70,
-            height: 70,
-            child: Image.asset('assets/images/game_stellar_gift/blind_box.png'),
-          )),
-        )
-      ]),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Column(children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(child: Image.asset('assets/images/game_stellar_gift/cambo_border.png', height: 60)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/game_stellar_gift/COMBO_${_comboCount == 0 ? 'gray' : _comboCount > 2 ? 'orange' : 'white'}.png', height: 20),
+                    SizedBox(width: 10),
+                    Text('x$_comboCount', style: TextStyle(color: Color.fromRGBO(255, 255, 255, _comboCount == 0 ? 0.32 : 1), fontSize: 24, fontWeight: FontWeight.w700))
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: 16),
+            Wrap(
+              spacing: 7,
+              runSpacing: 7,
+              children: List.generate(25, (index) => _openedList.contains(index) ? ballItem(index) : GestureDetector(
+                onTap: () => _onOpen(index),
+                child: Image.asset('assets/images/game_stellar_gift/blind_box.png', width: 70),
+              )),
+            ),
+          ]),
+          _openBlack ? Positioned(child: Image.asset('assets/images/game_stellar_gift/toast_opps.png')): Container()
+        ],
+      ),
     );
+  }
+  Widget ballItem(item) {
+    int index = _openedList.indexOf(item);
+    int type = _openedBalls[index];
+    return type == 1 ? BounceIn(child: Container(
+      width: 70,
+      height: 70,
+      padding: EdgeInsets.all(7),
+      child: Image.asset('assets/images/game_stellar_gift/ball_purple.png', width: 56),
+    )) : Pulse(child: Container(
+      width: 70,
+      height: 70,
+      padding: EdgeInsets.all(7),
+      child: Image.asset('assets/images/game_stellar_gift/ball_black.png', width: 56),
+    ));
   }
 
   Widget DataBox() {
@@ -58,10 +125,26 @@ class StellarGiftState extends State<StellarGift> {
       child: Column(children: [
         Container(
           height: 48,
+          margin: EdgeInsets.only(bottom: 24),
           decoration: BoxDecoration(
             color: Color(0xFF282828),
             borderRadius: BorderRadius.circular(8)
           ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/game_stellar_gift/ball_purple.png', width: 32),
+              SizedBox(width: 8),
+              Text('$_comboCount', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700))
+            ],
+          ),
+        ),
+        PrimaryBtn(
+          width: MediaQuery.of(context).size.width,
+          height: 62,
+          radius: 12,
+          text: _start ? 'Claim Reward' : 'Start Game',
+          func: _start ? _onClaim : _onStart
         )
       ])
     ));
