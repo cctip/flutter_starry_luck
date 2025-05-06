@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/common/utils.dart';
 import '/widget/detail_header.dart';
 
 class NebulaRush extends StatefulWidget {
@@ -19,6 +20,11 @@ class NebulaRushState extends State<NebulaRush> {
   final List _playerList = [];
   bool _dealerStand = false;
   bool _playerStand = false;
+  bool _someoneBurst = false; // 有人爆牌
+  bool _burstToast = false; // 爆牌提示显隐
+  bool _resultToast = false; // 结果提示显隐
+  String _result = ''; // 结果
+  bool _someonBlackJack = false; // 有人是黑杰克
 
   @override
   void initState() {
@@ -36,9 +42,11 @@ class NebulaRushState extends State<NebulaRush> {
   }
   // 对手自动游戏
   _dealerAuto(duration) {
+    if (_someoneBurst) return;
     _addDealerPoker(duration);
     Future.delayed(Duration(milliseconds: duration), () {
-      if (_calcDealerPoint(_dealerList) < 18) {
+      if (_someoneBurst) return;
+      if (_calcListPoint(_dealerList) < 18) {
         _dealerAuto(duration + 500);
       } else {
         setState(() => _dealerStand = true);
@@ -48,18 +56,28 @@ class NebulaRushState extends State<NebulaRush> {
   }
   // 给对手发牌
   _addDealerPoker(duration) {
+    if (_dealerList.length > 6 || _someoneBurst) return;
     Future.delayed(Duration(milliseconds: duration), () {
+      if (_someoneBurst) return;
       setState(() {
         _dealerList.add(randomNumber());
       });
+      if (_calcListPoint(_dealerList) > 21) {
+        _showBurstToast();
+      }
     });
   }
   // 给自己发牌
   _addPlayerPoker(duration) {
+    if (_playerList.length > 6 || _someoneBurst) return;
     Future.delayed(Duration(milliseconds: duration), () {
+      if (_someoneBurst) return;
       setState(() {
         _playerList.add(randomNumber());
       });
+      if (_calcListPoint(_playerList) > 21) {
+        _showBurstToast();
+      }
     });
   }
   // 生成随机卡牌编码
@@ -69,7 +87,7 @@ class NebulaRushState extends State<NebulaRush> {
     return val;
   }
   // 计算点数合
-  _calcDealerPoint(list) {
+  _calcListPoint(list) {
     int point = 0;
     for (int val in list) {
       point += val % 13 + 1;
@@ -84,9 +102,68 @@ class NebulaRushState extends State<NebulaRush> {
     });
     if (_dealerStand) _gameOver();
   }
+  
+  // 爆牌弹窗提示
+  _showBurstToast() {
+    setState(() {
+      _someoneBurst = true;
+      _burstToast = true;
+    });
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        _dealerStand = true;
+        _playerStand = true;
+      });
+    });
+    Future.delayed(Duration(milliseconds: 2000), () {
+      setState(() => _burstToast = false);
+      _gameOver();
+    });
+  }
   // 游戏结束
   _gameOver() {
-
+    int dealerPoint = _calcListPoint(_dealerList);
+    int playerPoint = _calcListPoint(_playerList);
+    setState(() {
+      _someonBlackJack = (_dealerList.length == 2 && dealerPoint == 21) || (_playerList.length == 2 && playerPoint == 21);
+      if (_someoneBurst) { // 爆牌者对方获胜
+        _result = dealerPoint > playerPoint ? 'win' : 'lose';
+      } else if (dealerPoint != playerPoint) { // 点数大者胜
+        _result = dealerPoint > playerPoint ? 'lose' : 'win';
+      } else if (dealerPoint == playerPoint) { // 相同时庄家胜，若玩家为黑杰克则胜出
+        _result = 'lose';
+        if (_playerList.length == 2 && playerPoint == 21) { // 玩家黑杰克
+          _result = 'win';
+        }
+        if (_dealerList.length == 2 && dealerPoint == 21) { // 庄家黑杰克
+          _result = 'lose';
+        }
+      }
+    });
+    if (_someonBlackJack) {
+      Future.delayed(Duration(milliseconds: 2000), () {
+        setState(() {
+          _someonBlackJack = false;
+          _resultToast = true;
+        });
+        _showReword();
+      });
+    } else {
+      setState(() {
+        _resultToast = true;
+      });
+      _showReword();
+    }
+  }
+  // 奖励弹窗
+  _showReword() {
+    Future.delayed(Duration(milliseconds: 1000), () {
+      if (_result == 'win') {
+        Utils.gameSuccess(context);
+      } else {
+        Utils.gameFailed(context);
+      }
+    });
   }
 
   // 计算牌面
@@ -131,11 +208,11 @@ class NebulaRushState extends State<NebulaRush> {
         Image.asset('assets/images/game_nebula_rush/table.png'),
         Positioned(
           top: 70 * MediaQuery.of(context).size.width / 402,
-          child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcDealerPoint(_dealerList) : _dealerList.isEmpty ? 0 : _dealerList[0] % 13 + 1)
+          child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcListPoint(_dealerList) : _dealerList.isEmpty ? 0 : _dealerList[0] % 13 + 1)
         ),
         Positioned(
           bottom: 110 * MediaQuery.of(context).size.width / 402,
-          child: PersonBox(name: 'Player', point: _calcDealerPoint(_playerList))
+          child: PersonBox(name: 'Player', point: _calcListPoint(_playerList))
         ),
         Positioned(
           top: (130) * MediaQuery.of(context).size.width / 402,
@@ -173,7 +250,32 @@ class NebulaRushState extends State<NebulaRush> {
               ]
             ),
           )
-        )
+        ),
+        
+        // 爆牌
+        _burstToast ? Positioned(
+          top: MediaQuery.of(context).size.width / 402 * 310 - 60,
+          child: FlipInX(child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Image.asset('assets/images/game_nebula_rush/toast_bust.png', fit: BoxFit.cover),
+          ))
+        ) : Container(),
+        // 黑杰克
+        _someonBlackJack ? Positioned(
+          top: MediaQuery.of(context).size.width / 402 * 310 - 60,
+          child: FlipInX(child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Image.asset('assets/images/game_nebula_rush/toast_black_jack.png', fit: BoxFit.cover),
+          ))
+        ) : Container(),
+        // 结果
+        _resultToast ? Positioned(
+          top: MediaQuery.of(context).size.width / 402 * 310 - 60,
+          child: FlipInX(child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Image.asset('assets/images/game_nebula_rush/toast_$_result.png', fit: BoxFit.cover),
+          ))
+        ) : Container(),
       ],
     );
   }
@@ -216,9 +318,9 @@ class NebulaRushState extends State<NebulaRush> {
     return Container(
       padding: EdgeInsets.all(16),
       child: _start ? Row(children: [
-        GradientBtn(text: 'Stand', colors: [Color(0xFF2BB100), Color(0xFF74EA4E)], func: _playerStand ? null : _onStand),
+        GradientBtn(text: 'Stand', colors: [Color(0xFF2BB100), Color(0xFF74EA4E)], func: _playerStand || _someoneBurst ? null : _onStand),
         SizedBox(width: 16),
-        GradientBtn(text: 'Hit', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _playerStand ? null : () {
+        GradientBtn(text: 'Hit', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _playerStand || _someoneBurst ? null : () {
           _addPlayerPoker(0);
         }),
       ]) : Row(children: [GradientBtn(text: 'Start Game', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _onStart)]),
