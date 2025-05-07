@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:flutter_starry_luck/widget/primary_btn.dart';
-import 'package:get/get.dart';
 
 class Utils {
   static void toast(BuildContext context, { required message }) {
@@ -30,7 +31,7 @@ class Utils {
   }
 
   // 游戏成功
-  static void gameSuccess(BuildContext context) {
+  static void gameSuccess(BuildContext context, { required int point, required int xp, Function? callback }) {
     showDialog(
       context: context,
       useSafeArea: false,
@@ -40,7 +41,7 @@ class Utils {
         },
         child: Material(
           color: Colors.black38,
-          child: Stack(
+          child: BounceIn(child: Stack(
             alignment: Alignment.center,
             children: [
               Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')),
@@ -70,7 +71,7 @@ class Utils {
                               Row(children: [
                                 Image.asset('assets/icons/gold.png', width: 24),
                                 SizedBox(width: 4),
-                                Text('1000', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+                                Text('$point', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
                               ])
                             ]
                           ),
@@ -82,7 +83,7 @@ class Utils {
                               Row(children: [
                                 Image.asset('assets/icons/xp.png', width: 24),
                                 SizedBox(width: 4),
-                                Text('100', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+                                Text('$xp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
                               ])
                             ]
                           ),
@@ -95,20 +96,27 @@ class Utils {
                       radius: 8,
                       text: 'Claim',
                       func: () {
-                        Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                        UserController.increasePoints(point);
+                        UserController.increaseXP(xp);
+                        if (callback != null) {
+                          Navigator.of(context).pop();
+                          callback();
+                        } else {
+                          Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                        }
                       }
                     )
                   ]),
                 )
               ),
             ],
-          ),
+          )),
         )
       )
     );
   }
   // 游戏失败
-  static void gameFailed(BuildContext context) {
+  static void gameFailed(BuildContext context, { int? point, required int xp, Function? callback }) {
     showDialog(
       context: context,
       useSafeArea: false,
@@ -118,7 +126,7 @@ class Utils {
         },
         child: Material(
           color: Colors.black38,
-          child: Stack(
+          child: BounceIn(child: Stack(
             alignment: Alignment.center,
             children: [
               // Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')),
@@ -148,7 +156,7 @@ class Utils {
                               Row(children: [
                                 Image.asset('assets/icons/xp.png', width: 24),
                                 SizedBox(width: 4),
-                                Text('100', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+                                Text('$xp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
                               ])
                             ]
                           ),
@@ -161,14 +169,20 @@ class Utils {
                       radius: 8,
                       text: 'Claim',
                       func: () {
-                        Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                        UserController.increaseXP(xp);
+                        if (callback != null) {
+                          Navigator.of(context).pop();
+                          callback();
+                        } else {
+                          Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                        }
                       }
                     )
                   ]),
                 )
               ),
             ],
-          ),
+          ))
         )
       )
     );

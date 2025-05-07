@@ -31,7 +31,6 @@ class HomePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DataBox(),
                 SettingBox()
               ]
             ),
@@ -131,24 +130,6 @@ class HomePageState extends State<ProfilePage> {
     );
   }
 
-  Widget DataBox() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Datas', style: TextStyle(color: Color(0xFF15171C), fontSize: 18, fontWeight: FontWeight.w700)),
-        SizedBox(height: 8),
-        Row(
-          children: [
-            SizedBox(width: 8),
-            Obx(() => DataItem(title: 'Challenge', count: UserController.battleCount.value)),
-            SizedBox(width: 8),
-            Obx(() => DataItem(title: 'Wins', count: UserController.battleCountWin.value)),
-          ],
-        ),
-        SizedBox(height: 32),
-      ]
-    );
-  }
   Widget DataItem({required String title, required int count}) {
     return Expanded(child: Container(
       padding: EdgeInsets.only(top: 4),

@@ -1,10 +1,11 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import '/widget/detail_header.dart';
 
 class NebulaRush extends StatefulWidget {
@@ -15,6 +16,7 @@ class NebulaRush extends StatefulWidget {
 }
 
 class NebulaRushState extends State<NebulaRush> {
+  final int _startFee = 200; // 游戏开始花费
   bool _start = false;
   final List _dealerList = [];
   final List _playerList = [];
@@ -31,15 +33,35 @@ class NebulaRushState extends State<NebulaRush> {
     super.initState();
   }
 
+  // 重置游戏
+  _onResetGame() {
+    setState(() {
+      _start = false;
+      _dealerList.clear();
+      _playerList.clear();
+      _dealerStand = false;
+      _playerStand = false;
+      _someoneBurst = false;
+      _burstToast = false;
+      _resultToast = false;
+      _result = '';
+      _someonBlackJack = false;
+    });
+  }
+
   // 开始游戏
   _onStart() {
-    setState(() {
-      _start = true;
+    if (UserController.points.value >= _startFee) {
+      UserController.decreasePoints(_startFee);
+      setState(() => _start = true);
       _dealerAuto(0);
       _addPlayerPoker(0);
       _addPlayerPoker(500);
-    });
+    } else {
+      Utils.toast(context, message: 'Insufficient points');
+    }
   }
+
   // 对手自动游戏
   _dealerAuto(duration) {
     if (_someoneBurst) return;
@@ -159,9 +181,9 @@ class NebulaRushState extends State<NebulaRush> {
   _showReword() {
     Future.delayed(Duration(milliseconds: 1000), () {
       if (_result == 'win') {
-        Utils.gameSuccess(context);
+        Utils.gameSuccess(context, point: 350, xp: 125, callback: _onResetGame);
       } else {
-        Utils.gameFailed(context);
+        Utils.gameFailed(context, xp: 75, callback: _onResetGame);
       }
     });
   }
@@ -205,18 +227,18 @@ class NebulaRushState extends State<NebulaRush> {
       alignment: Alignment.center,
       clipBehavior: Clip.none,
       children: [
-        Image.asset('assets/images/game_nebula_rush/table.png'),
+        ZoomIn(child: Image.asset('assets/images/game_nebula_rush/table.png')),
         Positioned(
           top: 70 * MediaQuery.of(context).size.width / 402,
-          child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcListPoint(_dealerList) : _dealerList.isEmpty ? 0 : _dealerList[0] % 13 + 1)
+          child: FlipInY(child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcListPoint(_dealerList) : _dealerList.isEmpty ? 0 : _dealerList[0] % 13 + 1))
         ),
         Positioned(
           bottom: 110 * MediaQuery.of(context).size.width / 402,
-          child: PersonBox(name: 'Player', point: _calcListPoint(_playerList))
+          child: FlipInY(child: PersonBox(name: 'Player', point: _calcListPoint(_playerList)))
         ),
         Positioned(
           top: (130) * MediaQuery.of(context).size.width / 402,
-          child: SizedBox(
+          child: ZoomIn(child: SizedBox(
             width: 260 * MediaQuery.of(context).size.width / 402,
             height: 320 * MediaQuery.of(context).size.width / 402,
             child: Column(
@@ -249,7 +271,7 @@ class NebulaRushState extends State<NebulaRush> {
                 ),
               ]
             ),
-          )
+          ))
         ),
         
         // 爆牌
@@ -323,7 +345,7 @@ class NebulaRushState extends State<NebulaRush> {
         GradientBtn(text: 'Hit', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _playerStand || _someoneBurst ? null : () {
           _addPlayerPoker(0);
         }),
-      ]) : Row(children: [GradientBtn(text: 'Start Game', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _onStart)]),
+      ]) : Row(children: [GradientBtn(text: 'Start Game ($_startFee)', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _onStart)]),
     );
   }
   Widget GradientBtn({ required String text, colors, func }) {

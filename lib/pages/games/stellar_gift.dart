@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import '/widget/detail_header.dart';
 
@@ -15,17 +17,32 @@ class StellarGift extends StatefulWidget {
 }
 
 class StellarGiftState extends State<StellarGift> {
+  final int _startFee = 200; // 游戏开始花费
   bool _start = false;
   final List _openedList = [];
   final List _openedBalls = [];
   int _comboCount = 0;
   bool _openBlack = false;
 
+  // 重置游戏
+  _onResetGame() {
+    setState(() {
+      _start = false;
+      _openedList.clear();
+      _openedBalls.clear();
+      _comboCount = 0;
+      _openBlack = false;
+    });
+  }
+
   // 开始游戏
   _onStart() {
-    setState(() {
-      _start = true;
-    });
+    if (UserController.points.value >= _startFee) {
+      UserController.decreasePoints(_startFee);
+      setState(() => _start = true);
+    } else {
+      Utils.toast(context, message: 'Insufficient points');
+    }
   }
 
   // 打开盲盒
@@ -40,10 +57,18 @@ class StellarGiftState extends State<StellarGift> {
       _openedBalls.add(type);
       _openBlack = type == 0;
     });
+    if (_openBlack) {
+      Future.delayed(Duration(milliseconds: 500), () {
+        Utils.gameFailed(context, xp: 70, callback: _onResetGame);
+      });
+    }
   }
 
   // 领取奖励
-  _onClaim() {}
+  _onClaim() {
+    if (_openBlack) return;
+    Utils.gameSuccess(context, point: 50 * _comboCount, xp: 120 + 5 * _comboCount, callback: _onResetGame);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +118,7 @@ class StellarGiftState extends State<StellarGift> {
               runSpacing: 7,
               children: List.generate(25, (index) => _openedList.contains(index) ? ballItem(index) : GestureDetector(
                 onTap: () => _onOpen(index),
-                child: Image.asset('assets/images/game_stellar_gift/blind_box.png', width: 70),
+                child: FlipInY(child: Image.asset('assets/images/game_stellar_gift/blind_box.png', width: 70)),
               )),
             ),
           ]),
@@ -143,7 +168,7 @@ class StellarGiftState extends State<StellarGift> {
           width: MediaQuery.of(context).size.width,
           height: 62,
           radius: 12,
-          text: _start ? 'Claim Reward' : 'Start Game',
+          text: _start ? 'Claim Reward' : 'Start Game ($_startFee)',
           func: _start ? _onClaim : _onStart
         )
       ])

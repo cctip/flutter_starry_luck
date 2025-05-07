@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:get/get.dart';
 
 class UserCard extends StatefulWidget {
@@ -37,7 +38,7 @@ class UserCardState extends State<UserCard> {
                 child: Image.asset('assets/icons/gold.png'),
               ),
               SizedBox(width: 10),
-              Text('1000', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              Obx(() => Text('${UserController.points.value}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))),
               SizedBox(width: 10),
             ],
           ),

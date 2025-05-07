@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import '/widget/primary_btn.dart';
 import 'package:animate_do/animate_do.dart';
 import '/widget/detail_header.dart';
@@ -16,19 +17,39 @@ class GalacticHand extends StatefulWidget {
 }
 
 class GalacticHandState extends State<GalacticHand> {
+  final int _startFee = 150; // 游戏开始花费
+  bool _start = false;
   final List _cardList = [];
   // 一对/两对/三条/顺子/同花/葫芦(三条+一对)/四条/同花顺/皇家同花顺
   final List _guessList = ['Pair', 'Two Pair', 'Three of kind', 'Straight', 'Flush', 'Full house', 'Four of kind', 'Straight flush', 'Royal flush'];
+  final List _pointList = [150, 200, 225, 250, 300, 350, 400, 450, 500];
   int _curGuessIndex = -1;
   bool _guessLocked = false;
   int _result = -1;
   bool _showResult = false;
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(milliseconds: 200), _deal);
-    Future.delayed(Duration(milliseconds: 700), _deal);
+  // 重置游戏
+  _onResetGame() {
+    setState(() {
+      _start = false;
+      _cardList.clear();
+      _curGuessIndex = -1;
+      _guessLocked = false;
+      _result = -1;
+      _showResult = false;
+    });
+  }
+
+  // 开始游戏
+  _onStartGame() {
+    if (UserController.points.value >= _startFee) {
+      UserController.decreasePoints(_startFee);
+      setState(() => _start = true);
+      Future.delayed(Duration(milliseconds: 200), _deal);
+      Future.delayed(Duration(milliseconds: 700), _deal);
+    } else {
+      Utils.toast(context, message: 'Insufficient points');
+    }
   }
 
   // 发牌
@@ -83,9 +104,9 @@ class GalacticHandState extends State<GalacticHand> {
     });
     Future.delayed(Duration(milliseconds: 2000), () {
       if (_curGuessIndex == _result) {
-        Utils.gameSuccess(context);
+        Utils.gameSuccess(context, point: _pointList[_result], xp: 100, callback: _onResetGame);
       } else {
-        Utils.gameFailed(context);
+        Utils.gameFailed(context, xp: 50, callback: _onResetGame);
       }
     });
   }
@@ -182,7 +203,7 @@ class GalacticHandState extends State<GalacticHand> {
         children: [
           Positioned(
             top: 30,
-            child: Container(
+            child: BackInDown(child: Container(
               width: 114,
               height: 63,
               decoration: BoxDecoration(
@@ -203,7 +224,7 @@ class GalacticHandState extends State<GalacticHand> {
                   )
                 ]
               )
-            )
+            ))
           ),
           Positioned(
             child: Wrap(
@@ -265,7 +286,7 @@ class GalacticHandState extends State<GalacticHand> {
           runSpacing: 8,
           children: List.generate(_guessList.length, (index) => GestureDetector(
             onTap: () {
-              if (_guessLocked) return;
+              if (_guessLocked || !_start) return;
               setState(() {
                 _curGuessIndex = index;
               });
@@ -287,10 +308,9 @@ class GalacticHandState extends State<GalacticHand> {
           width: MediaQuery.of(context).size.width,
           height: 62,
           radius: 12,
-          text: _curGuessIndex != -1 ? 'Confirm' : 'Waiting for select',
-          func: _curGuessIndex != -1 ? _onConfirm : null
+          text: _start ? (_curGuessIndex != -1 ? 'Confirm' : 'Waiting for select') : 'Start Game ($_startFee)',
+          func: _start ? (_curGuessIndex != -1 ? _onConfirm : null) : _onStartGame
         )
-        // Image.asset('assets/images/game_galactic_hand/button.png')
       ]),
     );
   }
