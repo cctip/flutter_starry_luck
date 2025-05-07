@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import '/widget/detail_header.dart';
@@ -43,6 +44,7 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
   _onStart() {
     if (UserController.points.value >= _startFee) {
       UserController.decreasePoints(_startFee);
+      GameController.startGame('qr');
       if (_start) return;
       setState(() {
         _start = true;
@@ -58,6 +60,7 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
           case 9: successPoint = 250; break;
         }
         Future.delayed(Duration(milliseconds: 1000), () {
+          GameController.winGame('qr');
           Utils.gameSuccess(context, point: successPoint, xp: 75, callback: _onResetGame);
         });
       } else {
@@ -114,7 +117,7 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
               child: _buildDots(_numberRight),
             )),
           ],
-        )) : Positioned(child: Image.asset('assets/images/game_quest_roll/dice_group.png', height: 120)),
+        )) : BounceInDown(child: Positioned(child: Image.asset('assets/images/game_quest_roll/dice_group.png', height: 120))),
       ],
     );
   }

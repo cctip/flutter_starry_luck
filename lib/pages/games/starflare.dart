@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import '/widget/detail_header.dart';
@@ -40,6 +41,7 @@ class StarflareState extends State<Starflare> {
   _onStart() {
     if (UserController.points.value >= _startFee) {
       UserController.decreasePoints(_startFee);
+      GameController.startGame('sf');
       if (_start) return;
       setState(() => _start = true);
       Future.delayed(Duration(milliseconds: 100), () {
@@ -52,6 +54,7 @@ class StarflareState extends State<Starflare> {
         }
         if (_lightList.length < 6 && _guessIndex == 1 || _lightList.length == 6 && _guessIndex == 2 || _lightList.length > 6 && _guessIndex == 3) {
           Future.delayed(Duration(milliseconds: 1000), () {
+            GameController.winGame('sf');
             Utils.gameSuccess(context, point: _lightList.length == 6 && _guessIndex == 2 ? 300 : 120, xp: 70 + 5 * _lightList.length, callback: _onResetGame);
           });
         } else {

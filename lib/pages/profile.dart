@@ -1,9 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import '/controller/user.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,204 +13,328 @@ class ProfilePage extends StatefulWidget {
 }
 
 class HomePageState extends State<ProfilePage> {
+  final List _tabList = ['Details', 'Statistics'];
+  int _curTab = 0;
+  int get played_gh => GameController.game_gh_played.value;
+  int get played_nr => GameController.game_nr_played.value;
+  int get played_sg => GameController.game_sg_played.value;
+  int get played_ff => GameController.game_ff_played.value;
+  int get played_sf => GameController.game_sf_played.value;
+  int get played_qr => GameController.game_qr_played.value;
+  int get won_gh => GameController.game_gh_won.value;
+  int get won_nr => GameController.game_nr_won.value;
+  int get won_sg => GameController.game_sg_won.value;
+  int get won_ff => GameController.game_ff_won.value;
+  int get won_sf => GameController.game_sf_won.value;
+  int get won_qr => GameController.game_qr_won.value;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  double get _playedTime => 0;
+  int get _playedNum => played_gh + played_nr + played_sg + played_ff + played_sf + played_qr;
+  int get _wonNum => won_gh + won_nr + won_sg + won_ff + won_sf + won_qr;
+  String get _winRate => (_wonNum / _playedNum * 100).toStringAsFixed(2);
+  
 
   @override
   Widget build(BuildContext context) {
     return Material(child: Container(
-      color: Color(0xFFF1F5F9),
+      color: Color(0xFF212121),
+      padding: EdgeInsets.only(bottom: 64),
       child: Column(
         children: [
           HeaderBox(),
-          Expanded(child: Container(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).padding.bottom + 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SettingBox()
-              ]
-            ),
-          ))
+          ContentBox()
         ],
       ),
     ));
   }
 
   Widget HeaderBox() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF1D4ED8), Color(0xFF4C1AE2)],
-          stops: [0, 1], // 调整渐变范围
-        ),
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))
-      ),
-      child: Column(
-        children: [
-          AppBar(
-            backgroundColor: Colors.transparent,
-            iconTheme: IconThemeData(color: Colors.white),
-            centerTitle: true,
-            title: Text('Profile', style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold
-            )),
-          ),
-          SizedBox(
-            height: 92,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    padding: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(56)
-                    ),
+    return Column(children: [
+      Container(
+        height: MediaQuery.of(context).padding.top + 96,
+        color: Color(0xFF191919),
+        padding: EdgeInsets.fromLTRB(16, MediaQuery.of(context).padding.top + 16, 16, 16),
+        child: Row(
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFFFFAA1C), Color(0xFFFF8743)],
+                  stops: [0, 1], // 调整渐变范围
+                ),
+                borderRadius: BorderRadius.circular(12)
+              ),
+              child: Container(
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Color(0xFF191919),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Image.asset('assets/images/avator/avator.png'),
+              ),
+            ),
+            SizedBox(width: 16),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 32,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF282828),
+                    borderRadius: BorderRadius.circular(8)
                   ),
-                  SizedBox(width: 16),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Row(children: [
-                        Text('Noob101', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, height: 1)),
-                        SizedBox(width: 8),
-                        Obx(() => Text('Lvl.${UserController.level.value}', style: TextStyle(color: Color(0xFFE2E8F0), fontSize: 16, fontWeight: FontWeight.w700, height: 1))),
-                      ]),
                       Container(
-                        width: 250,
-                        height: 8,
-                        margin: EdgeInsets.only(top: 10, bottom: 6),
+                        width: 32,
+                        height: 32,
+                        padding: EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: Color(0xFF989BEE),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color.fromRGBO(255, 170, 28, 0.1), Color.fromRGBO(255, 135, 67, 0.1)],
+                            stops: [0, 1], // 调整渐变范围
+                          ),
+                        ),
+                        child: Image.asset('assets/icons/gold.png'),
+                      ),
+                      SizedBox(width: 10),
+                      Obx(() => Text('${UserController.points.value}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Image.asset('assets/images/badge/badge_1.png', width: 24),
+                    SizedBox(width: 6),
+                    Container(
+                      width: 150,
+                      height: 10,
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF313131),
+                        borderRadius: BorderRadius.circular(8)
+                      ),
+                      child: Row(children: [
+                        Container(
+                          width: 150 * UserController.xp.value / (UserController.level.value * 1000),
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFFFAA1C),
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                        )
+                      ]),
+                    ),
+                    SizedBox(width: 6),
+                    Text('0%', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 11))
+                  ],
+                )
+              ]
+            ),
+            Spacer(),
+            Image.asset('assets/icons/settings.png', width: 24)
+          ],
+        )
+      ),
+      Row(children: List.generate(_tabList.length, (index) => TabItem(index)))
+    ]);
+  }
+  Widget TabItem(index) {
+    return Expanded(child: GestureDetector(
+      onTap: () => setState(() => _curTab = index),
+      child: Container(
+        width: 100,
+        height: 60,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: _curTab == index ? [Color.fromRGBO(33, 33, 33, 0), Color.fromRGBO(255, 170, 28, 0.3)] : [Color(0xFF212121), Color(0xFF212121)],
+            stops: [0, 1], // 调整渐变范围
+          ),
+          border: Border(bottom: BorderSide(color: _curTab == index ? Color(0xFFFFAA1C) : Color(0xFF313131)))
+        ),
+        child: Text(_tabList[index], style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+      )
+    ));
+  }
+
+  Widget ContentBox() {
+    return Expanded(child: CustomScrollView(slivers: [
+      SliverToBoxAdapter(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).padding.bottom + 16),
+          child: _curTab == 0 ? DetailsContent() : StatisticsContent()
+        )
+      )
+    ]));
+  }
+  
+  Widget DetailsContent() {
+    return Column(
+      spacing: 16,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DetailItem(name: 'Galactic Hand', icon: 'game_galactic_hand', played: played_gh, won: won_gh),
+        DetailItem(name: 'Nebula Rush', icon: 'game_nebula_rush', played: played_nr, won: won_nr),
+        DetailItem(name: 'Stellar Gift', icon: 'game_stellar_gift', played: played_sg, won: won_sg),
+        DetailItem(name: 'Frostflare', icon: 'game_frostflare', played: played_ff, won: won_ff),
+        DetailItem(name: 'Starflare', icon: 'game_starflare', played: played_sf, won: won_sf),
+        DetailItem(name: 'Quest Roll', icon: 'game_quest_roll', played: played_qr, won: won_qr),
+      ]
+    );
+  }
+  Widget DetailItem({ required String name, required String icon, required int played, required int won }) {
+    return Container(
+      height: 100,
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Color(0xFF282828),
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: Row(
+        children: [
+          Image.asset('assets/images/bg/$icon.png'),
+          SizedBox(width: 16),
+          Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 16)),
+              SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('Win Rate: ', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 11, height: 1.2)),
+                  Text('${played == 0 ? 0 : (won / played * 100).toStringAsFixed(2)}%', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600, height: 1)),
+                ],
+              ),
+              Spacer(),
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                      child: Container(
+                        height: 10,
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF313131),
                           borderRadius: BorderRadius.circular(8)
                         ),
                         child: Row(children: [
                           Container(
-                            width: 250 * UserController.xp.value / (UserController.level.value * 1000),
-                            height: 8,
+                            width: constraints.maxWidth * (played == 0 ? 0 : (won / played)),
+                            height: 5,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Color(0xFFFFAA1C),
                               borderRadius: BorderRadius.circular(8)
                             ),
                           )
                         ]),
-                      ),
-                      SizedBox(
-                        width: 250,
-                        child: Row(children: [
-                          Obx(() => Text('${UserController.xp.value}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700))),
-                          Text('/${UserController.level.value * 1000}', style: TextStyle(color: Color(0xFF989BEE), fontWeight: FontWeight.w500)),
-                          SizedBox(width: 4),
-                          Image.asset('assets/icons/xp.png', width: 16),
-                          Spacer(),
-                          Obx(() => Text('Lvl.${UserController.level.value+1}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))),
-                        ]),
                       )
-                    ]
-                  )
-                ],
+                    )
+                  );
+                }
               ),
-            ),
-          )
+              SizedBox(height: 2),
+              Row(
+                children: [
+                  Text('Won: ', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 11, height: 1.2)),
+                  Text('$won', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 12, fontWeight: FontWeight.w600, height: 1)),
+                  Spacer(),
+                  Text('Played: ', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 11, height: 1.2)),
+                  Text('$played', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 12, fontWeight: FontWeight.w600, height: 1)),
+                ],
+              )
+            ],
+          ))
         ],
       ),
     );
   }
 
-  Widget DataItem({required String title, required int count}) {
-    return Expanded(child: Container(
-      padding: EdgeInsets.only(top: 4),
-      height: 62,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16)
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-        Text(title, style: TextStyle(color: Color(0xFFA2A6AF), fontSize: 12, fontWeight: FontWeight.w500)),
-        Text('$count', style: TextStyle(color: Color(0xFF1D4ED8), fontSize: 20, fontWeight: FontWeight.w900)),
-      ]),
-    ));
-  }
-
-  Widget SettingBox() {
-    return Expanded(child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget StatisticsContent() {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
       children: [
-        Text('Settings', style: TextStyle(color: Color(0xFF15171C), fontSize: 18, fontWeight: FontWeight.w700)),
-        SizedBox(height: 8),
-        Expanded(child: Container(
-          clipBehavior: Clip.antiAlias,
+        Container(
+          width: (MediaQuery.of(context).size.width - 48) / 2,
+          height: 260,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16)
+            color: Color(0xFF282828),
+            borderRadius: BorderRadius.circular(8)
           ),
-          child: Column(children: [
-            linkItem('Privacy Policy', (){
-              launchUrl(Uri.parse('https://www.freeprivacypolicy.com/live/41e43b5d-e73e-451f-ac00-5838508ff035'));
-            }),
-            linkItem('Terms of Services', (){
-              launchUrl(Uri.parse('https://www.freeprivacypolicy.com/live/10e585c9-bcf8-4603-a6c0-78274ea108b4'));
-            }),
-            Container(
-              height: 58,
-              margin: EdgeInsets.only(top: 8),
-              padding: EdgeInsets.symmetric(horizontal: 26),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Version', style: TextStyle(color: Color(0xFF282B32), fontSize: 16, fontWeight: FontWeight.w500)),
-                  Text('V1.0.0', style: TextStyle(color: Color(0xFFA2A6AF), fontSize: 12, fontWeight: FontWeight.w500)),
-                ],
-              ),
-            )
-          ]),
-        ))
-      ]
-    ));
-  }
-  Widget linkItem(text, func) {
-    return Container(
-      height: 58,
-      margin: EdgeInsets.only(top: 8),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          alignment: Alignment.centerLeft,
-          overlayColor: Colors.black,
-          shadowColor: Colors.transparent,
-          elevation: 0, // 阴影
-          backgroundColor: Colors.transparent,
-          shape: BeveledRectangleBorder(
-            borderRadius: BorderRadius.circular(0)
-          )
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Time played', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
+              SizedBox(height: 6),
+              Text('${_playedTime}h', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
-        onPressed: func,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(text, style: TextStyle(
-              color: Color(0xFF282B32),
-              fontSize: 16,
-              fontWeight: FontWeight.w500
-            )),
-            Icon(Icons.arrow_forward_ios, color: Color(0xFF282B32))
-          ],
+        Container(
+          width: (MediaQuery.of(context).size.width - 48) / 2,
+          height: 260,
+          decoration: BoxDecoration(
+            color: Color(0xFF282828),
+            borderRadius: BorderRadius.circular(8)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Win rate', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
+              SizedBox(height: 6),
+              Text('$_winRate%', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
-      ),
+        Container(
+          width: (MediaQuery.of(context).size.width - 48) / 2,
+          height: 260,
+          decoration: BoxDecoration(
+            color: Color(0xFF282828),
+            borderRadius: BorderRadius.circular(8)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Hands played', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
+              SizedBox(height: 6),
+              Text('$_playedNum', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+        Container(
+          width: (MediaQuery.of(context).size.width - 48) / 2,
+          height: 260,
+          decoration: BoxDecoration(
+            color: Color(0xFF282828),
+            borderRadius: BorderRadius.circular(8)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Hands won', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
+              SizedBox(height: 6),
+              Text('$_wonNum', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import '/widget/primary_btn.dart';
 import 'package:animate_do/animate_do.dart';
@@ -44,6 +45,7 @@ class GalacticHandState extends State<GalacticHand> {
   _onStartGame() {
     if (UserController.points.value >= _startFee) {
       UserController.decreasePoints(_startFee);
+      GameController.startGame('gh');
       setState(() => _start = true);
       Future.delayed(Duration(milliseconds: 200), _deal);
       Future.delayed(Duration(milliseconds: 700), _deal);
@@ -104,6 +106,7 @@ class GalacticHandState extends State<GalacticHand> {
     });
     Future.delayed(Duration(milliseconds: 2000), () {
       if (_curGuessIndex == _result) {
+        GameController.winGame('gh');
         Utils.gameSuccess(context, point: _pointList[_result], xp: 100, callback: _onResetGame);
       } else {
         Utils.gameFailed(context, xp: 50, callback: _onResetGame);

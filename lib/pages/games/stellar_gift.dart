@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import '/widget/detail_header.dart';
@@ -39,6 +40,7 @@ class StellarGiftState extends State<StellarGift> {
   _onStart() {
     if (UserController.points.value >= _startFee) {
       UserController.decreasePoints(_startFee);
+      GameController.startGame('sg');
       setState(() => _start = true);
     } else {
       Utils.toast(context, message: 'Insufficient points');
@@ -67,6 +69,7 @@ class StellarGiftState extends State<StellarGift> {
   // 领取奖励
   _onClaim() {
     if (_openBlack) return;
+    GameController.winGame('sg');
     Utils.gameSuccess(context, point: 50 * _comboCount, xp: 120 + 5 * _comboCount, callback: _onResetGame);
   }
 

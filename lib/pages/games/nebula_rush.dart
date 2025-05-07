@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import '/widget/detail_header.dart';
 
@@ -53,6 +54,7 @@ class NebulaRushState extends State<NebulaRush> {
   _onStart() {
     if (UserController.points.value >= _startFee) {
       UserController.decreasePoints(_startFee);
+      GameController.startGame('nr');
       setState(() => _start = true);
       _dealerAuto(0);
       _addPlayerPoker(0);
@@ -181,6 +183,7 @@ class NebulaRushState extends State<NebulaRush> {
   _showReword() {
     Future.delayed(Duration(milliseconds: 1000), () {
       if (_result == 'win') {
+        GameController.winGame('nr');
         Utils.gameSuccess(context, point: 350, xp: 125, callback: _onResetGame);
       } else {
         Utils.gameFailed(context, xp: 75, callback: _onResetGame);
