@@ -16,12 +16,14 @@ class UserController extends GetxController {
     level.value = SharePref.getInt('level') ?? 1;
     xp.value = SharePref.getInt('xp') ?? 0;
     xpAll.value = SharePref.getInt('xpAll') ?? 0;
-    if (SharePref.getBool('first') == null) {
-      SharePref.setBool('first', false);
-      SharePref.setInt('points', 1000);
-    }
     points.value = SharePref.getInt('points') ?? 0;
     first.value = SharePref.getBool('first');
+  }
+
+  static onFirstUse() {
+    increasePoints(1000);
+    first.value = false;
+    SharePref.setBool('first', false);
   }
 
   //增加经验

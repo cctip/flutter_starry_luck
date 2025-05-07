@@ -1,6 +1,7 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/common/utils.dart';
 import '/common/eventbus.dart';
 import '/controller/user.dart';
 import './home.dart';
@@ -23,6 +24,9 @@ class IndexPageState extends State<IndexPage> {
   void initState() {
     super.initState();
     UserController.init();
+    if (UserController.first.value != false) {
+      Utils.welcomeBonus(context);
+    }
     bus.on('tabChange', (index) => onTabChanged(index));
   }
 
