@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
 import '/common/eventbus.dart';
@@ -91,7 +92,7 @@ class IndexPageState extends State<IndexPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/tabbar/$icon${currentIndex == index ? '_ac' : ''}.png', width: 24),
+            currentIndex == index ? Pulse(child: Image.asset('assets/images/tabbar/${icon}_ac.png', width: 24)) : Image.asset('assets/images/tabbar/$icon.png', width: 24),
             SizedBox(height: 4),
             Text('$text', style: TextStyle(color: currentIndex == index ? Color(0xFFFFAA1C) : Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12, fontWeight: FontWeight.w500))
           ],
