@@ -21,7 +21,7 @@ class UserController extends GetxController {
     xpAll.value = SharePref.getInt('xpAll') ?? 0;
     xpUp.value = xpList[level.value];
     points.value = SharePref.getInt('points') ?? 0;
-    first.value = SharePref.getBool('first');
+    first.value = SharePref.getBool('first') == null ? true : false;
     onInitBadge();
   }
 
