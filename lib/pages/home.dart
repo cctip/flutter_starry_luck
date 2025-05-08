@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/common/eventbus.dart';
+import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:get/get.dart';
 import '/widget/page_header.dart';
 
@@ -12,6 +14,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  int get _xp => UserController.xp.value;
+  int get _xpUp => UserController.xpUp.value;
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +34,10 @@ class HomePageState extends State<HomePage> {
     return Expanded(child: CustomScrollView(slivers: [
       SliverToBoxAdapter(
         child: Column(children: [
-          Image.asset('assets/images/bg/keep_checing_in.png'),
+          GestureDetector(
+            onTap: () => Get.toNamed('/check_in'),
+            child: Image.asset('assets/images/bg/keep_checing_in.png')
+          ),
           Container(
             padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).padding.bottom + 58 + 24),
             child: Column(
@@ -66,51 +74,56 @@ class HomePageState extends State<HomePage> {
                   }
                 ),
                 SizedBox(height: 24),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 128 * MediaQuery.of(context).size.width / 402,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/bg/push_your_limits.png'), fit: BoxFit.cover)
-                  ),
-                  child: Row(children: [
-                    Container(
-                      width: 180,
-                      margin: EdgeInsets.only(top: 74, left: 16),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Current', style: TextStyle(color: Color.fromRGBO(33, 33, 33, 0.6), fontSize: 11, fontWeight: FontWeight.bold)),
-                              Text('Next', style: TextStyle(color: Color.fromRGBO(33, 33, 33, 0.6), fontSize: 11, fontWeight: FontWeight.bold)),
-                            ]
-                          ),
-                          Container(
-                            width: 180,
-                            height: 12,
-                            margin: EdgeInsets.only(top: 4),
-                            padding: EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(33, 33, 33, 0.56),
-                              borderRadius: BorderRadius.circular(6)
-                            ),
-                            child: Row(
+                GestureDetector(
+                  onTap: () {
+                    bus.emit('tabChange', 2);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 128 * MediaQuery.of(context).size.width / 402,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: AssetImage('assets/images/bg/push_your_limits.png'), fit: BoxFit.cover)
+                    ),
+                    child: Row(children: [
+                      Container(
+                        width: 180,
+                        margin: EdgeInsets.only(top: 74, left: 16),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  width: 0,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(6)
-                                  ),
-                                )
-                              ],
+                                Text('Current', style: TextStyle(color: Color.fromRGBO(33, 33, 33, 0.6), fontSize: 11, fontWeight: FontWeight.bold)),
+                                Text('Next', style: TextStyle(color: Color.fromRGBO(33, 33, 33, 0.6), fontSize: 11, fontWeight: FontWeight.bold)),
+                              ]
                             ),
-                          )
-                        ],
-                      ),
-                    )
-                  ])
+                            Container(
+                              width: 180,
+                              height: 12,
+                              margin: EdgeInsets.only(top: 4),
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(33, 33, 33, 0.56),
+                                borderRadius: BorderRadius.circular(6)
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 176 * _xp / _xpUp,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(6)
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ])
+                  )
                 )
               ]
             ),

@@ -3,6 +3,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
+import 'package:flutter_starry_luck/controller/game.dart';
 import '/common/eventbus.dart';
 import '/controller/user.dart';
 import './home.dart';
@@ -25,6 +26,7 @@ class IndexPageState extends State<IndexPage> {
   void initState() {
     super.initState();
     UserController.init();
+    GameController.init();
     if (UserController.first.value != false) {
       Utils.welcomeBonus(context);
     }

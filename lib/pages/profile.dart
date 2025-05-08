@@ -13,6 +13,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class HomePageState extends State<ProfilePage> {
+  int get _level => UserController.level.value;
+  int get _xp => UserController.xp.value;
+  int get _xpUp => UserController.xpUp.value;
+
   final List _tabList = ['Details', 'Statistics'];
   int _curTab = 0;
   int get played_gh => GameController.game_gh_played.value;
@@ -31,7 +35,7 @@ class HomePageState extends State<ProfilePage> {
   double get _playedTime => 0;
   int get _playedNum => played_gh + played_nr + played_sg + played_ff + played_sf + played_qr;
   int get _wonNum => won_gh + won_nr + won_sg + won_ff + won_sf + won_qr;
-  String get _winRate => (_wonNum / _playedNum * 100).toStringAsFixed(2);
+  String get _winRate => _playedNum == 0 ? '0' : (_wonNum / _playedNum * 100).toStringAsFixed(2);
   
 
   @override
@@ -59,6 +63,7 @@ class HomePageState extends State<ProfilePage> {
             Container(
               width: 64,
               height: 64,
+              clipBehavior: Clip.antiAlias,
               padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -69,14 +74,42 @@ class HomePageState extends State<ProfilePage> {
                 ),
                 borderRadius: BorderRadius.circular(12)
               ),
-              child: Container(
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: Color(0xFF191919),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Image.asset('assets/images/avator/avator.png'),
-              ),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF191919),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Image.asset('assets/images/avator/avator.png'),
+                  ),
+                  Positioned(child: Container(
+                    width: 64,
+                    height: 19,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF212121),
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+                    ),
+                  )),
+                  Positioned(child: Container(
+                    width: 64,
+                    height: 19,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color.fromRGBO(255, 170, 28, 0.3), Color.fromRGBO(255, 170, 28, 0.3)],
+                        stops: [0, 1], // 调整渐变范围
+                      ),
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+                    ),
+                    child: Text('Lvl.$_level', style: TextStyle(color: Colors.white, fontSize: 16, height: 1)),
+                  ))
+                ],
+              )
             ),
             SizedBox(width: 16),
             Column(
@@ -114,7 +147,7 @@ class HomePageState extends State<ProfilePage> {
                 ),
                 Row(
                   children: [
-                    Image.asset('assets/images/badge/badge_1.png', width: 24),
+                    Image.asset('assets/images/badge/badge_$_level.png', width: 24),
                     SizedBox(width: 6),
                     Container(
                       width: 150,
@@ -126,7 +159,7 @@ class HomePageState extends State<ProfilePage> {
                       ),
                       child: Row(children: [
                         Container(
-                          width: 150 * UserController.xp.value / (UserController.level.value * 1000),
+                          width: 146 * _xp / _xpUp,
                           height: 5,
                           decoration: BoxDecoration(
                             color: Color(0xFFFFAA1C),
@@ -136,13 +169,16 @@ class HomePageState extends State<ProfilePage> {
                       ]),
                     ),
                     SizedBox(width: 6),
-                    Text('0%', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 11))
+                    Text('${(_xp / _xpUp * 100).toStringAsFixed(1)}%', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 11))
                   ],
                 )
               ]
             ),
             Spacer(),
-            Image.asset('assets/icons/settings.png', width: 24)
+            GestureDetector(
+              onTap: () => Get.toNamed('/settings'),
+              child: Image.asset('assets/icons/settings.png', width: 24),
+            )
           ],
         )
       ),

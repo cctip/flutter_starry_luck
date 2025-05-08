@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/pages/check_in.dart';
 import 'package:get/get.dart';
 import 'common/share_pref.dart';
 import 'package:flutter/services.dart';
 
 import 'pages/index.dart';
 import 'pages/profile.dart';
+import 'pages/settings.dart';
 import 'pages/games/galactic_hand.dart';
 import 'pages/games/nebula_rush.dart';
 import 'pages/games/stellar_gift.dart';
@@ -34,7 +36,9 @@ class MainApp extends StatelessWidget {
       initialRoute: '/',
       home: IndexPage(),
       getPages: [
+        GetPage(name: '/check_in', page: () => CheckInPage()),
         GetPage(name: '/profile', page: () => ProfilePage()),
+        GetPage(name: '/settings', page: () => Settings()),
 
         GetPage(name: '/galactic_hand', page: () => GalacticHand()),
         GetPage(name: '/nebula_rush', page: () => NebulaRush()),

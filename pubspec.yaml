@@ -30,6 +30,7 @@ flutter:
     - assets/images/tabbar/
     - assets/images/avator/
     - assets/images/badge/
+    - assets/images/check_in/
     - assets/images/bg/
     - assets/images/rules/
     - assets/images/game_galactic_hand/

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
+import 'package:get/get.dart';
 import '/widget/page_header.dart';
 
 class BadgePage extends StatefulWidget {
@@ -17,6 +18,11 @@ class BadgePageState extends State<BadgePage> {
   int get _level => UserController.level.value;
   int get _xp => UserController.xp.value;
   int get _xpUp => UserController.xpUp.value;
+  List get _claimList => UserController.claimList;
+
+  _onClaim(index) {
+    UserController.onClaimBadgeReward(index, _rewardList[index]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +156,32 @@ class BadgePageState extends State<BadgePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      LayoutBuilder(
+                      _level - 1 > index ? Obx(() => Container(
+                        height: 28,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: _claimList[index] ? [Colors.transparent, Colors.transparent] : [Color(0xFFFF8743), Color(0xFFFFAA1C)],
+                            stops: [0.5, 1], // 调整渐变范围
+                          ),
+                          borderRadius: BorderRadius.circular(4)
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.transparent,
+                            disabledForegroundColor: Color(0xFF3AD164),
+                            disabledBackgroundColor: Color.fromRGBO(58, 209, 100, 0.15),
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.black26,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          ),
+                          onPressed: _claimList[index] ? null : () => _onClaim(index),
+                          child: Text(_claimList[index] ? 'Completed' : 'Claim', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                        ),
+                      )) : LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints constraints) {
                           return SingleChildScrollView(
                             scrollDirection: Axis.horizontal,

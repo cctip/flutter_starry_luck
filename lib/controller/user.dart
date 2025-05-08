@@ -12,6 +12,7 @@ class UserController extends GetxController {
   static final xpAll = RxInt(0); // 所有经验
   static final xpUp = RxInt(0); // 升级所需经验
   static final points = RxInt(0); // 积分
+  static final claimList = RxList([]);
 
   // 初始化
   static init() {
@@ -21,12 +22,32 @@ class UserController extends GetxController {
     xpUp.value = xpList[level.value];
     points.value = SharePref.getInt('points') ?? 0;
     first.value = SharePref.getBool('first');
+    onInitBadge();
   }
 
+  // 第一次使用
   static onFirstUse() {
     increasePoints(1000);
     first.value = false;
     SharePref.setBool('first', false);
+  }
+
+  // 初始化徽章奖励
+  static onInitBadge() {
+    claimList.value = [
+      SharePref.getBool('claimed_0') ?? false,
+      SharePref.getBool('claimed_1') ?? false,
+      SharePref.getBool('claimed_2') ?? false,
+      SharePref.getBool('claimed_3') ?? false,
+      SharePref.getBool('claimed_4') ?? false,
+      SharePref.getBool('claimed_5') ?? false,
+    ];
+  }
+  // 领取徽章奖励
+  static onClaimBadgeReward(index, points) {
+    increasePoints(points);
+    SharePref.setBool('claimed_$index', true);
+    onInitBadge();
   }
 
   //增加经验
