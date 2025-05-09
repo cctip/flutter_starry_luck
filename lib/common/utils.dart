@@ -33,74 +33,54 @@ class Utils {
   // 第一次进入
   static void welcomeBonus(BuildContext context) {
     Future.delayed(Duration(milliseconds: 100), () {
-      showDialog(
-        context: context,
-        useSafeArea: false,
-        builder: (_) => WillPopScope(
-          onWillPop: () async {
-            return false; // 返回 true 允许关闭，false 阻止关闭
-          },
-          child: Material(
-            color: Colors.black38,
-            child: BounceIn(child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')),
-                Positioned(
-                  top: 200,
-                  child: Container(
-                    width: 338,
-                    height: 439,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(image: AssetImage('assets/images/bg/welcome_bouns.png'))
-                    ),
-                    child: Column(children: [
-                      SizedBox(height: 200),
-                      Text('Thanks for joining — here’s a gift!', style: TextStyle(color: Colors.white, fontSize: 14)),
-                      Container(
-                        width: 242,
-                        height: 78,
-                        margin: EdgeInsets.symmetric(vertical: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Reward', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
-                                SizedBox(height: 8),
-                                Row(children: [
-                                  Image.asset('assets/icons/gold.png', width: 24),
-                                  SizedBox(width: 4),
-                                  Text('1000', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-                                ])
-                              ]
-                            ),
-                          ]
-                        ),
-                      ),
-                      PrimaryBtn(
-                        width: 102,
-                        height: 40,
-                        radius: 8,
-                        text: 'Claim',
-                        func: () {
-                          UserController.onFirstUse();
-                          Navigator.of(context).pop();
-                        }
-                      )
-                    ]),
-                  )
-                ),
-              ],
-            )),
-          )
-        )
-      );
+      globalDialog(context, bg: 'welcome_bouns', text: 'Thanks for joining — here’s a gift!', musk: true, point: 1000, callback: () => UserController.onFirstUse());
     });
+  }
+  // 抽奖
+  static void checkReward(context, point) {
+    globalDialog(context, text: 'Boom! Major win unlocked', musk: true, point: point, callback: () => UserController.onFreeSpin());
   }
   // 游戏成功
   static void gameSuccess(BuildContext context, { required int point, required int xp, Function? callback }) {
+    globalDialog(context, bg: 'success', text: 'Congratulations on your win!', musk: true, point: point, xp: xp, callback: callback);
+  }
+  // 游戏失败
+  static void gameFailed(BuildContext context, { int? point, required int xp, Function? callback }) {
+    globalDialog(context, bg: 'failed', text: 'One step closer to greatness', point: point, xp: xp, callback: callback);
+  }
+
+  static void globalDialog(context, { bg, musk, text, point, xp, callback }) {
+    String background = bg ?? 'success';
+    String dialogText = text ?? 'Congratulations on your win!';
+    List<Widget> content = [];
+    if (point != null) {
+      content.add(Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Reward', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
+          SizedBox(height: 8),
+          Row(children: [
+            Image.asset('assets/icons/gold.png', width: 24),
+            SizedBox(width: 4),
+            Text('$point', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+          ])
+        ]
+      ));
+    }
+    if (xp != null) {
+      content.add(Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('XP', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
+          SizedBox(height: 8),
+          Row(children: [
+            Image.asset('assets/icons/xp.png', width: 24),
+            SizedBox(width: 4),
+            Text('$xp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+          ])
+        ]
+      ));
+    }
     showDialog(
       context: context,
       useSafeArea: false,
@@ -113,50 +93,25 @@ class Utils {
           child: BounceIn(child: Stack(
             alignment: Alignment.center,
             children: [
-              Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')),
+              musk != null ? Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')) : Positioned(child: Container()),
               Positioned(
                 top: 200,
                 child: Container(
                   width: 338,
                   height: 439,
                   decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/bg/success.png'))
+                    image: DecorationImage(image: AssetImage('assets/images/bg/$background.png'))
                   ),
                   child: Column(children: [
                     SizedBox(height: 200),
-                    Text('Congratulations on your win!', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text(dialogText, style: TextStyle(color: Colors.white, fontSize: 14)),
                     Container(
                       width: 242,
                       height: 78,
                       margin: EdgeInsets.symmetric(vertical: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Reward', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
-                              SizedBox(height: 8),
-                              Row(children: [
-                                Image.asset('assets/icons/gold.png', width: 24),
-                                SizedBox(width: 4),
-                                Text('$point', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-                              ])
-                            ]
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('XP', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
-                              SizedBox(height: 8),
-                              Row(children: [
-                                Image.asset('assets/icons/xp.png', width: 24),
-                                SizedBox(width: 4),
-                                Text('$xp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-                              ])
-                            ]
-                          ),
-                        ]
+                        children: content
                       ),
                     ),
                     PrimaryBtn(
@@ -165,14 +120,12 @@ class Utils {
                       radius: 8,
                       text: 'Claim',
                       func: () {
-                        UserController.increasePoints(point);
-                        UserController.increaseXP(xp);
+                        if (point != null) UserController.increasePoints(point);
+                        if (xp != null) UserController.increaseXP(xp);
                         if (callback != null) {
-                          Navigator.of(context).pop();
                           callback();
-                        } else {
-                          Navigator.of(context).popUntil(ModalRoute.withName('/'));
                         }
+                        Navigator.of(context).pop();
                       }
                     )
                   ]),
@@ -180,78 +133,6 @@ class Utils {
               ),
             ],
           )),
-        )
-      )
-    );
-  }
-  // 游戏失败
-  static void gameFailed(BuildContext context, { int? point, required int xp, Function? callback }) {
-    showDialog(
-      context: context,
-      useSafeArea: false,
-      builder: (_) => WillPopScope(
-        onWillPop: () async {
-          return false; // 返回 true 允许关闭，false 阻止关闭
-        },
-        child: Material(
-          color: Colors.black38,
-          child: BounceIn(child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Opacity(opacity: 0.5, child: Image.asset('assets/images/bg/musk.png')),
-              Positioned(
-                top: 200,
-                child: Container(
-                  width: 338,
-                  height: 439,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/bg/failed.png'))
-                  ),
-                  child: Column(children: [
-                    SizedBox(height: 200),
-                    Text('One step closer to greatness', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    Container(
-                      width: 242,
-                      height: 78,
-                      margin: EdgeInsets.symmetric(vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('XP', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32), fontSize: 12)),
-                              SizedBox(height: 8),
-                              Row(children: [
-                                Image.asset('assets/icons/xp.png', width: 24),
-                                SizedBox(width: 4),
-                                Text('$xp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-                              ])
-                            ]
-                          ),
-                        ]
-                      ),
-                    ),
-                    PrimaryBtn(
-                      width: 102,
-                      height: 40,
-                      radius: 8,
-                      text: 'Claim',
-                      func: () {
-                        UserController.increaseXP(xp);
-                        if (callback != null) {
-                          Navigator.of(context).pop();
-                          callback();
-                        } else {
-                          Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                        }
-                      }
-                    )
-                  ]),
-                )
-              ),
-            ],
-          ))
         )
       )
     );

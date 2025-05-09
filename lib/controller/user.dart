@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:intl/intl.dart';
 import '/common/share_pref.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,8 @@ class UserController extends GetxController {
   static final points = RxInt(0); // 积分
   static final claimList = RxList([]);
 
+  static final freeCount = RxInt(3); // 免费次数
+
   // 初始化
   static init() {
     level.value = SharePref.getInt('level') ?? 1;
@@ -21,15 +25,36 @@ class UserController extends GetxController {
     xpAll.value = SharePref.getInt('xpAll') ?? 0;
     xpUp.value = xpList[level.value];
     points.value = SharePref.getInt('points') ?? 0;
-    first.value = SharePref.getBool('first') == null ? true : false;
+    first.value = SharePref.getBool('first') == false ? false : true;
+    onInitFree();
     onInitBadge();
   }
 
   // 第一次使用
   static onFirstUse() {
-    increasePoints(1000);
     first.value = false;
     SharePref.setBool('first', false);
+  }
+
+  // 初始化免费抽奖次数
+  static onInitFree() {
+    String time = SharePref.getString('freeTime') ?? '';
+    String now = formater.format(DateTime.now());
+    if (time == '' || time != now) {
+      freeCount.value = 3;
+      SharePref.setString('freeTime', '');
+      SharePref.setInt('freeCount', 3);
+    } else {
+      freeCount.value = SharePref.getInt('freeCount');
+    }
+  }
+  // 完成免费抽奖
+  static onFreeSpin() {
+    if (freeCount.value == 0) return;
+    String now = formater.format(DateTime.now());
+    SharePref.setString('freeTime', now);
+    freeCount.value--;
+    SharePref.setInt('freeCount', freeCount.value);
   }
 
   // 初始化徽章奖励
