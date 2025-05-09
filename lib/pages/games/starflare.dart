@@ -171,12 +171,12 @@ class StarflareState extends State<Starflare> {
 
   Widget DataBox() {
     return Expanded(child: Container(
-      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       color: Color(0xFF212121),
       child: Column(children: [
         Container(
           height: 48,
-          margin: EdgeInsets.only(bottom: 24),
+          margin: EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8)
           ),

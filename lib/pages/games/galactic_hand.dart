@@ -282,7 +282,7 @@ class GalacticHandState extends State<GalacticHand> {
 
   Widget GuessBox() {
     return Container(
-      padding: EdgeInsets.only(top: 32, left: 20, right: 20),
+      padding: EdgeInsets.only(top: 16, left: 20, right: 20),
       child: Column(children: [
         Wrap(
           spacing: 8,
@@ -306,7 +306,7 @@ class GalacticHandState extends State<GalacticHand> {
             ),
           ))
         ),
-        SizedBox(height: 32),
+        SizedBox(height: 16),
         PrimaryBtn(
           width: MediaQuery.of(context).size.width,
           height: 62,
