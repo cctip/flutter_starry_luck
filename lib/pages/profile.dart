@@ -159,7 +159,7 @@ class HomePageState extends State<ProfilePage> {
                       ),
                       child: Row(children: [
                         Container(
-                          width: 146 * _xp / _xpUp,
+                          width: 146 * ((_xp < _xpUp) ? (_xp / _xpUp) : 1),
                           height: 5,
                           decoration: BoxDecoration(
                             color: Color(0xFFFFAA1C),

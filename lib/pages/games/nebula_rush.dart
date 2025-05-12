@@ -80,7 +80,7 @@ class NebulaRushState extends State<NebulaRush> {
   }
   // 给对手发牌
   _addDealerPoker(duration) {
-    if (_dealerList.length > 6 || _someoneBurst) return;
+    if (_someoneBurst) return;
     Future.delayed(Duration(milliseconds: duration), () {
       if (_someoneBurst) return;
       setState(() {

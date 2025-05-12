@@ -109,7 +109,7 @@ class HomePageState extends State<HomePage> {
                               child: Row(
                                 children: [
                                   Obx(() => Container(
-                                    width: 176 * _xp / _xpUp,
+                                    width: 176 * (_xp < _xpUp ? _xp / _xpUp : 1),
                                     height: 8,
                                     decoration: BoxDecoration(
                                       color: Colors.white,

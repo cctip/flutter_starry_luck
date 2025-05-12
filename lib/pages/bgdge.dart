@@ -79,7 +79,7 @@ class BadgePageState extends State<BadgePage> {
               ),
               child: Row(children: [
                 Container(
-                  width: 176 * _xp / _xpUp,
+                  width: 176 * ((_xp < _xpUp) ? (_xp / _xpUp) : 1),
                   height: 8,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -196,7 +196,7 @@ class BadgePageState extends State<BadgePage> {
                                 ),
                                 child: Row(children: [
                                   _level - 1 == index ? Container(
-                                    width: constraints.maxWidth * _xp / _xpUp,
+                                    width: constraints.maxWidth * ((_xp < _xpUp) ? (_xp / _xpUp) : 1),
                                     height: 5,
                                     decoration: BoxDecoration(
                                       color: Color(0xFFFFAA1C),
