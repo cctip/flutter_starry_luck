@@ -89,7 +89,7 @@ class BadgePageState extends State<BadgePage> {
               ])
             ),
             SizedBox(height: 4),
-            Text('$_xp/$_xpUp', style: TextStyle(color: Colors.white54)),
+            Text('${_xp < 3000 ? _xp : 3000}/$_xpUp', style: TextStyle(color: Colors.white54)),
           ],
         ),
         Stack(children: [
@@ -156,7 +156,7 @@ class BadgePageState extends State<BadgePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _level - 1 > index ? Obx(() => Container(
+                      _level - 1 > index || _xp >= 3000 ? Obx(() => Container(
                         height: 28,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -216,7 +216,7 @@ class BadgePageState extends State<BadgePage> {
             ]
           ),
         ),
-        Positioned(bottom: 10, child: Offstage(offstage: _level - 1 > index, child: Text('${_level > index ? (_xp / _xpUp * 100).toStringAsFixed(1) : 0}%', style: TextStyle(color: Colors.white60, fontSize: 11, height: 1)))),
+        Positioned(bottom: 10, child: Offstage(offstage: _level - 1 > index || _xp >= 3000, child: Text('${_level > index ? (_xp / _xpUp * 100).toStringAsFixed(1) : 0}%', style: TextStyle(color: Colors.white60, fontSize: 11, height: 1)))),
         Positioned(
           top: 0,
           right: 0,

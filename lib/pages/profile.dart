@@ -32,11 +32,11 @@ class HomePageState extends State<ProfilePage> {
   int get won_sf => GameController.game_sf_won.value;
   int get won_qr => GameController.game_qr_won.value;
 
-  double get _playedTime => 0;
+  double get _playedTime => GameController.game_palyTime.value;
   int get _playedNum => played_gh + played_nr + played_sg + played_ff + played_sf + played_qr;
   int get _wonNum => won_gh + won_nr + won_sg + won_ff + won_sf + won_qr;
   String get _winRate => _playedNum == 0 ? '0' : (_wonNum / _playedNum * 100).toStringAsFixed(2);
-  
+
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,7 @@ class HomePageState extends State<ProfilePage> {
                       ]),
                     ),
                     SizedBox(width: 6),
-                    Text('${(_xp / _xpUp * 100).toStringAsFixed(1)}%', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 11))
+                    Text('${_xp < 3000 ? (_xp / _xpUp * 100).toStringAsFixed(1) : 100}%', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.64), fontSize: 11))
                   ],
                 )
               ]
@@ -318,7 +318,7 @@ class HomePageState extends State<ProfilePage> {
             children: [
               Text('Time played', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
               SizedBox(height: 6),
-              Text('${_playedTime}h', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+              Obx(() => Text(_playedTime.toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600))),
             ],
           ),
         ),

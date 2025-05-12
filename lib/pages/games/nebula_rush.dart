@@ -186,6 +186,7 @@ class NebulaRushState extends State<NebulaRush> {
         GameController.winGame('nr');
         Utils.gameSuccess(context, point: 350, xp: 125, callback: _onResetGame);
       } else {
+        GameController.calcGameTime();
         Utils.gameFailed(context, xp: 75, callback: _onResetGame);
       }
     });

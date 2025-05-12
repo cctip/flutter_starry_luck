@@ -23,7 +23,7 @@ class UserController extends GetxController {
     level.value = SharePref.getInt('level') ?? 1;
     xp.value = SharePref.getInt('xp') ?? 0;
     xpAll.value = SharePref.getInt('xpAll') ?? 0;
-    xpUp.value = xpList[level.value];
+    xpUp.value = xpList[level.value - 1];
     points.value = SharePref.getInt('points') ?? 0;
     first.value = SharePref.getBool('first') == false ? false : true;
     onInitFree();
@@ -80,11 +80,11 @@ class UserController extends GetxController {
     xpAll.value += value;
     if (level.value < 6) {
       int xpNow = xp.value + value;
-      int xpUpNow = xpList[level.value];
+      int xpUpNow = xpList[level.value - 1];
       if (xpNow >= xpUpNow) {
         xp.value = xpNow - xpUpNow;
         level.value++;
-        xpUp.value = xpList[level.value];
+        xpUp.value = xpList[level.value - 1];
         SharePref.setInt('level', level.value);
       } else {
         xp.value += value;

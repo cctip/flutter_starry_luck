@@ -60,6 +60,7 @@ class StellarGiftState extends State<StellarGift> {
       _openBlack = type == 0;
     });
     if (_openBlack) {
+      GameController.calcGameTime();
       Future.delayed(Duration(milliseconds: 500), () {
         Utils.gameFailed(context, xp: 70, callback: _onResetGame);
       });
@@ -172,7 +173,7 @@ class StellarGiftState extends State<StellarGift> {
           height: 62,
           radius: 12,
           text: _start ? 'Claim Reward' : 'Start Game ($_startFee)',
-          func: _start ? _onClaim : _onStart
+          func: _start ? _comboCount == 0 ? null : _onClaim : _onStart
         )
       ])
     ));

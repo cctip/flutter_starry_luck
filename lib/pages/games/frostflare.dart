@@ -92,6 +92,7 @@ class FrostflareState extends State<Frostflare> {
     } else {
       setState(() => _ending = true);
       Future.delayed(Duration(milliseconds: 500), () {
+        GameController.calcGameTime();
         Utils.gameFailed(context, xp: 50, callback: _onResetGame);
       });
     }

@@ -59,6 +59,7 @@ class StarflareState extends State<Starflare> {
           });
         } else {
           Future.delayed(Duration(milliseconds: 1000), () {
+            GameController.calcGameTime();
             Utils.gameFailed(context, xp: 30, callback: _onResetGame);
           });
         }

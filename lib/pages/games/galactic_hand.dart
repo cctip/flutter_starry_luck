@@ -109,6 +109,7 @@ class GalacticHandState extends State<GalacticHand> {
         GameController.winGame('gh');
         Utils.gameSuccess(context, point: _pointList[_result], xp: 100, callback: _onResetGame);
       } else {
+        GameController.calcGameTime();
         Utils.gameFailed(context, xp: 50, callback: _onResetGame);
       }
     });
