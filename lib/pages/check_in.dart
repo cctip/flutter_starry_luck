@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/utils.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
@@ -176,7 +177,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
               SizedBox(height: 110),
               Image.asset('assets/images/check_in/title.png', height: 60),
               SizedBox(height: 12),
-              Stack(
+              Bounce(child: Stack(
                 alignment: Alignment.center,
                 children: [
                   Image.asset('assets/images/check_in/content.png', height: 280),
@@ -184,7 +185,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
                   Positioned(top: 10, child: Image.asset('assets/images/check_in/text_top.png', height: 22)),
                   Positioned(bottom: 12, child: Image.asset('assets/images/check_in/text_bottom.png', height: 14)),
                 ],
-              ),
+              )),
               Expanded(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

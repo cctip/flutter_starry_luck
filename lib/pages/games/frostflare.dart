@@ -154,7 +154,7 @@ class FrostflareState extends State<Frostflare> {
     ));
     // 黑色禁止方块
     final box_disabled = ZoomIn(child: Image.asset('assets/images/game_frostflare/box_disabled.png', height: 48));
-    return (_reachedList.length > index && _reachedList[index] == item) ? box_reached : (_floor > index ? box_blind : box_disabled);
+    return _reachedList.length > index ? (_reachedList[index] == item ? box_reached : box_disabled) : (_floor > index ? box_blind : box_disabled);
   }
 
   Widget DataBox() {
