@@ -108,14 +108,14 @@ class HomePageState extends State<HomePage> {
                               ),
                               child: Row(
                                 children: [
-                                  Container(
+                                  Obx(() => Container(
                                     width: 176 * _xp / _xpUp,
                                     height: 8,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(6)
                                     ),
-                                  )
+                                  ))
                                 ],
                               ),
                             )

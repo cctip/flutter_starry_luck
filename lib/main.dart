@@ -36,6 +36,7 @@ class MainApp extends StatelessWidget {
       ),
       initialRoute: '/',
       home: FlutterSplashScreen.fadeIn(
+        duration: const Duration(milliseconds: 3000),
         onInit: () => debugPrint("On Init"),
         onEnd: () => debugPrint("On End"),
         onAnimationEnd: () => debugPrint("On Fade In End"),

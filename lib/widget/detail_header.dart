@@ -22,8 +22,7 @@ class DetailHeaderState extends State<DetailHeader> {
         alignment: Alignment.bottomCenter,
         child: SingleChildScrollView(
           child: Container(
-            height: 600,
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 32),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 64),
             decoration: BoxDecoration(
               color: Color(0xFF212121),
               borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))

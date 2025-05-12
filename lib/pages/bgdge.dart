@@ -79,7 +79,7 @@ class BadgePageState extends State<BadgePage> {
               ),
               child: Row(children: [
                 Container(
-                  width: 180 * _xp / _xpUp,
+                  width: 176 * _xp / _xpUp,
                   height: 8,
                   decoration: BoxDecoration(
                     color: Colors.white,

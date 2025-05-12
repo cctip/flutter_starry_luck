@@ -37,7 +37,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollControllers.asMap().forEach((index, controller) {
         controller.animateTo(
-          300,
+          274 + MediaQuery.of(context).padding.top,
           duration: Duration(seconds: 1),
           curve: Curves.easeOut,
         );
@@ -54,7 +54,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     // 递归随机数生成
     getRandom(index) {
       int endIndex = (Random().nextInt(20) + 5);
-      double randomOffset = endIndex * _itemHeight * 6 - 20; // 保证完整滚动圈数
+      double randomOffset = endIndex * _itemHeight * 6 - 46 + MediaQuery.of(context).padding.top; // 保证完整滚动圈数
       if (randomOffset > _randomOffsets[index] - 1000 && randomOffset < _randomOffsets[index] + 1000) {
         randomOffset = getRandom(index);
       }
@@ -254,7 +254,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
           itemBuilder: (_, i) => Container(
             height: _itemHeight,
             alignment: Alignment.center,
-            child: Image.asset('assets/images/check_in/reward_${i%5+1}.png', width: 56),
+            child: Image.asset('assets/images/check_in/reward_${i%5+1}.png', width: 46),
           ),
         ),
       ),
