@@ -318,7 +318,7 @@ class HomePageState extends State<ProfilePage> {
             children: [
               Text('Time played', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.32))),
               SizedBox(height: 6),
-              Obx(() => Text(_playedTime.toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600))),
+              Obx(() => Text('${_playedTime.toStringAsFixed(2)}h', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600))),
             ],
           ),
         ),
