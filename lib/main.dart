@@ -3,6 +3,7 @@ import 'package:flutter_starry_luck/pages/check_in.dart';
 import 'package:get/get.dart';
 import 'common/share_pref.dart';
 import 'package:flutter/services.dart';
+import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 
 import 'pages/index.dart';
 import 'pages/profile.dart';
@@ -34,7 +35,17 @@ class MainApp extends StatelessWidget {
         fontFamily: 'Manrope',
       ),
       initialRoute: '/',
-      home: IndexPage(),
+      home: FlutterSplashScreen.fadeIn(
+        onInit: () => debugPrint("On Init"),
+        onEnd: () => debugPrint("On End"),
+        onAnimationEnd: () => debugPrint("On Fade In End"),
+        childWidget: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Image.asset("assets/images/splash.png"),
+        ),
+        nextScreen: const IndexPage(),
+      ),
       getPages: [
         GetPage(name: '/check_in', page: () => CheckInPage()),
         GetPage(name: '/profile', page: () => ProfilePage()),
