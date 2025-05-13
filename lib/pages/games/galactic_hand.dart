@@ -104,7 +104,7 @@ class GalacticHandState extends State<GalacticHand> {
         _showResult = true;
       });
     });
-    Future.delayed(Duration(milliseconds: 2000), () {
+    Future.delayed(Duration(milliseconds: 3000), () {
       if (_curGuessIndex == _result) {
         GameController.winGame('gh');
         Utils.gameSuccess(context, point: _pointList[_result], xp: 100, callback: _onResetGame);
@@ -238,18 +238,21 @@ class GalacticHandState extends State<GalacticHand> {
           ),
           Positioned(
             bottom: 88,
-            child: _showResult ? Text(_result == -1 ? 'High Card' : _guessList[_result], style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              shadows: [
-                Shadow(
-                  color: Color(0xFFFFAA1C), // 阴影颜色
-                  offset: Offset(0, 0), // 阴影偏移量 (水平, 垂直)
-                  blurRadius: 4, // 阴影模糊程度
-                ),
-              ]
-            )) : Container()
+            child: ZoomIn(
+              animate: _showResult,
+              child: Text(_showResult ? (_result == -1 ? 'High Card' : _guessList[_result]) : '', style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                shadows: [
+                  Shadow(
+                    color: Color(0xFFFFAA1C), // 阴影颜色
+                    offset: Offset(0, 0), // 阴影偏移量 (水平, 垂直)
+                    blurRadius: 4, // 阴影模糊程度
+                  ),
+                ]
+              )
+            ))
           )
         ],
       ),

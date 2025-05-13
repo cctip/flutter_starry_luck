@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:math';
 
@@ -24,6 +24,8 @@ class StellarGiftState extends State<StellarGift> {
   final List _openedBalls = [];
   int _comboCount = 0;
   bool _openBlack = false;
+  bool _showClaim = false; // 领取特效
+  bool _showToast = false; // 失败提示
 
   // 重置游戏
   _onResetGame() {
@@ -33,6 +35,8 @@ class StellarGiftState extends State<StellarGift> {
       _openedBalls.clear();
       _comboCount = 0;
       _openBlack = false;
+      _showClaim = false;
+      _showToast = false;
     });
   }
 
@@ -52,26 +56,35 @@ class StellarGiftState extends State<StellarGift> {
     if (!_start || _openedList.contains(index) || _openBlack) return;
     setState(() {
       _openedList.add(index);
-      int type = Random().nextInt(2);
-      if (type != 0) {
-        _comboCount++;
-      }
+      int type = Random().nextInt(10);
       _openedBalls.add(type);
-      _openBlack = type == 0;
+      if (type < 6) {
+        _comboCount++;
+      } else {
+        _openBlack = true;
+        Future.delayed(Duration(milliseconds: 1000), () {
+          setState(() {
+            _showToast = true;
+          });
+          Future.delayed(Duration(milliseconds: 2000), () {
+            GameController.calcGameTime();
+            Utils.gameFailed(context, xp: 70, callback: _onResetGame);
+          });
+        });
+      }
     });
-    if (_openBlack) {
-      GameController.calcGameTime();
-      Future.delayed(Duration(milliseconds: 500), () {
-        Utils.gameFailed(context, xp: 70, callback: _onResetGame);
-      });
-    }
   }
 
   // 领取奖励
   _onClaim() {
-    if (_openBlack) return;
-    GameController.winGame('sg');
-    Utils.gameSuccess(context, point: 50 * _comboCount, xp: 120 + 5 * _comboCount, callback: _onResetGame);
+    if (_openBlack || _showClaim) return;
+    setState(() {
+      _showClaim = true;
+    });
+    Future.delayed(Duration(milliseconds: 2000), () {
+      GameController.winGame('sg');
+      Utils.gameSuccess(context, point: 50 * _comboCount, xp: 120 + 5 * _comboCount, callback: _onResetGame);
+    });
   }
 
   @override
@@ -106,14 +119,14 @@ class StellarGiftState extends State<StellarGift> {
               alignment: Alignment.center,
               children: [
                 Positioned(child: Image.asset('assets/images/game_stellar_gift/cambo_border.png', height: 60)),
-                Row(
+                HeartBeat(animate: _showClaim, child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/game_stellar_gift/COMBO_${_comboCount == 0 ? 'gray' : _comboCount > 2 ? 'orange' : 'white'}.png', height: 20),
                     SizedBox(width: 10),
                     Text('x$_comboCount', style: TextStyle(color: Color.fromRGBO(255, 255, 255, _comboCount == 0 ? 0.32 : 1), fontSize: 24, fontWeight: FontWeight.w700))
                   ],
-                )
+                ))
               ],
             ),
             SizedBox(height: 16),
@@ -126,7 +139,7 @@ class StellarGiftState extends State<StellarGift> {
               )),
             ),
           ]),
-          _openBlack ? Positioned(child: Image.asset('assets/images/game_stellar_gift/toast_opps.png')): Container()
+          _showToast ? Positioned(child: FlipInX(child: Image.asset('assets/images/game_stellar_gift/toast_opps.png'))): Container()
         ],
       ),
     );
@@ -134,17 +147,17 @@ class StellarGiftState extends State<StellarGift> {
   Widget ballItem(item) {
     int index = _openedList.indexOf(item);
     int type = _openedBalls[index];
-    return type == 1 ? BounceIn(child: Container(
+    return type < 6 ? HeartBeat(animate: _showClaim, child: BounceIn(child: Container(
       width: 70,
       height: 70,
       padding: EdgeInsets.all(7),
       child: Image.asset('assets/images/game_stellar_gift/ball_purple.png', width: 56),
-    )) : Pulse(child: Container(
+    ))) : Pulse(child: SpinPerfect(infinite: true, child: Container(
       width: 70,
       height: 70,
       padding: EdgeInsets.all(7),
       child: Image.asset('assets/images/game_stellar_gift/ball_black.png', width: 56),
-    ));
+    )));
   }
 
   Widget DataBox() {

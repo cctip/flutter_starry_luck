@@ -177,7 +177,13 @@ class HomePageState extends State<ProfilePage> {
             Spacer(),
             GestureDetector(
               onTap: () => Get.toNamed('/settings'),
-              child: Image.asset('assets/icons/settings.png', width: 24),
+              child: Container(
+                width: 36,
+                height: 36,
+                padding: EdgeInsets.fromLTRB(12, 6, 0, 6),
+                color: Colors.transparent,
+                child: Image.asset('assets/icons/settings.png', width: 24),
+              ),
             )
           ],
         )
