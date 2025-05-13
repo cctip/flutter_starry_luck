@@ -18,7 +18,7 @@ class DetailHeaderState extends State<DetailHeader> {
     showDialog(
       context: context,
       useSafeArea: false,
-      builder: (_) => ZoomIn(child: Container(
+      builder: (_) => SlideInUp(child: Container(
         alignment: Alignment.bottomCenter,
         child: SingleChildScrollView(
           child: Container(

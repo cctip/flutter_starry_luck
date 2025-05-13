@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_starry_luck/common/utils.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
 import 'package:get/get.dart';
 import '/widget/page_header.dart';
@@ -21,7 +22,7 @@ class BadgePageState extends State<BadgePage> {
   List get _claimList => UserController.claimList;
 
   _onClaim(index) {
-    UserController.onClaimBadgeReward(index, _rewardList[index]);
+    Utils.badgeReward(context, index, _rewardList[index]);
   }
 
   @override

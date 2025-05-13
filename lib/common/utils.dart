@@ -40,6 +40,10 @@ class Utils {
   static void checkReward(context, point) {
     globalDialog(context, text: 'Boom! Major win unlocked', musk: true, point: point, callback: () => UserController.onFreeSpin());
   }
+  // 等级奖励
+  static void badgeReward(context, index, point) {
+    globalDialog(context, bg: 'well_down', text: 'Your Glory Unlocked', musk: true, point: point, callback: () => UserController.onClaimBadgeReward(index));
+  }
   // 游戏成功
   static void gameSuccess(BuildContext context, { required int point, required int xp, Function? callback }) {
     globalDialog(context, bg: 'success', text: 'Congratulations on your win!', musk: true, point: point, xp: xp, callback: callback);

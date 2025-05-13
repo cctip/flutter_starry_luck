@@ -53,3 +53,6 @@ flutter:
         - asset: assets/fonts/Manrope/Manrope-Regular.ttf
         - asset: assets/fonts/Manrope/Manrope-SemiBold.ttf
           style: italic
+    - family: BlackHanSans
+      fonts: 
+        - asset: assets/fonts/BlackHanSans/BlackHanSans-Regular.ttf

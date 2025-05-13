@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-Widget PrimaryBtn({width, height, required double radius, required String text, func}) {
+Widget PrimaryBtn({required width, required height, required double radius, required String text, required func}) {
   return Container(
     width: width / 1,
     height: height / 1,

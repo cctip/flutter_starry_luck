@@ -56,7 +56,8 @@ class NebulaRushState extends State<NebulaRush> {
       UserController.decreasePoints(_startFee);
       GameController.startGame('nr');
       setState(() => _start = true);
-      _dealerAuto(0);
+      _addDealerPoker(0);
+      _addDealerPoker(500);
       _addPlayerPoker(0);
       _addPlayerPoker(500);
     } else {
@@ -66,30 +67,30 @@ class NebulaRushState extends State<NebulaRush> {
 
   // 对手自动游戏
   _dealerAuto(duration) {
-    if (_someoneBurst) return;
+    if (_someoneBurst || _dealerStand) return;
     _addDealerPoker(duration);
     Future.delayed(Duration(milliseconds: duration), () {
-      if (_someoneBurst) return;
-      if (_calcListPoint(_dealerList) < 18) {
-        _dealerAuto(duration + 500);
-      } else {
-        setState(() => _dealerStand = true);
-        if (_playerStand) _gameOver();
-      }
+      if (_someoneBurst || _dealerStand) return;
+      _dealerAuto(duration + 500);
     });
   }
   // 给对手发牌
   _addDealerPoker(duration) {
     if (_someoneBurst) return;
-    Future.delayed(Duration(milliseconds: duration), () {
-      if (_someoneBurst) return;
-      setState(() {
-        _dealerList.add(randomNumber());
+    if (_calcListPoint(_dealerList) < 18) {
+      Future.delayed(Duration(milliseconds: duration), () {
+        if (_someoneBurst) return;
+        setState(() {
+          _dealerList.add(randomNumber());
+        });
+        if (_calcListPoint(_dealerList) > 21) {
+          _showBurstToast();
+        }
       });
-      if (_calcListPoint(_dealerList) > 21) {
-        _showBurstToast();
-      }
-    });
+    } else {
+      setState(() => _dealerStand = true);
+      if (_playerStand) _gameOver();
+    }
   }
   // 给自己发牌
   _addPlayerPoker(duration) {
@@ -112,9 +113,19 @@ class NebulaRushState extends State<NebulaRush> {
   }
   // 计算点数合
   _calcListPoint(list) {
+    if (list.length == 2) {
+      if (list[0] % 13 == 0 && list[1] % 13 >= 9 || list[1] % 13 == 0 && list[0] % 13 >= 9) {
+        return 21;
+      }
+    }
     int point = 0;
     for (int val in list) {
-      point += val % 13 + 1;
+      int newIndex = val % 13;
+      if (newIndex >= 9) {
+        point += 10;
+      } else {
+        point += newIndex + 1;
+      }
     }
     return point;
   }
@@ -124,7 +135,12 @@ class NebulaRushState extends State<NebulaRush> {
     setState(() {
       _playerStand = true;
     });
-    if (_dealerStand) _gameOver();
+    if (_calcListPoint(_dealerList) < 18) {
+      _dealerAuto(1000);
+    } else {
+      setState(() => _dealerStand = true);
+      if (_playerStand) _gameOver();
+    }
   }
   
   // 爆牌弹窗提示

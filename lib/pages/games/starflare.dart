@@ -44,7 +44,7 @@ class StarflareState extends State<Starflare> {
       GameController.startGame('sf');
       if (_start) return;
       setState(() => _start = true);
-      Future.delayed(Duration(milliseconds: 100), () {
+      Future.delayed(Duration(milliseconds: 1000), () {
         for (int i = 0; i < 12; i++) {
           if (Random().nextInt(2) == 1) {
             setState(() {
@@ -53,12 +53,12 @@ class StarflareState extends State<Starflare> {
           }
         }
         if (_lightList.length < 6 && _guessIndex == 1 || _lightList.length == 6 && _guessIndex == 2 || _lightList.length > 6 && _guessIndex == 3) {
-          Future.delayed(Duration(milliseconds: 1000), () {
+          Future.delayed(Duration(milliseconds: 2000), () {
             GameController.winGame('sf');
             Utils.gameSuccess(context, point: _lightList.length == 6 && _guessIndex == 2 ? 300 : 120, xp: 70 + 5 * _lightList.length, callback: _onResetGame);
           });
         } else {
-          Future.delayed(Duration(milliseconds: 1000), () {
+          Future.delayed(Duration(milliseconds: 2000), () {
             GameController.calcGameTime();
             Utils.gameFailed(context, xp: 30, callback: _onResetGame);
           });
@@ -97,11 +97,11 @@ class StarflareState extends State<Starflare> {
             top: _lightList.contains(0) || _lightList.contains(1) || _lightList.contains(2) ? 0 : 10,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(0) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(0), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(0) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(1) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(1), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(1) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(2) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(2), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(2) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
@@ -109,9 +109,9 @@ class StarflareState extends State<Starflare> {
             top: _lightList.contains(3) || _lightList.contains(4) ? 68 : 78,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(3) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(3), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(3) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(4) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(4), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(4) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
@@ -119,7 +119,7 @@ class StarflareState extends State<Starflare> {
             top: _lightList.contains(5) ? 136 : 146,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(5) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(5), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_up${_lightList.contains(5) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
@@ -128,11 +128,11 @@ class StarflareState extends State<Starflare> {
             bottom: _lightList.contains(6) || _lightList.contains(7) || _lightList.contains(8) ? 0 : 10,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(6) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(6), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(6) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(7) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(7), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(7) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(8) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(8), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(8) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
@@ -140,9 +140,9 @@ class StarflareState extends State<Starflare> {
             bottom: _lightList.contains(9) || _lightList.contains(10) ? 68 : 78,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(9) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(9), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(9) ? '_light' : ''}.png', width: 72)),
                 SizedBox(width: 32),
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(10) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(10), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(10) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
@@ -150,21 +150,26 @@ class StarflareState extends State<Starflare> {
             bottom: _lightList.contains(11) ? 136 : 146,
             child: Row(
               children: [
-                Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(11) ? '_light' : ''}.png', width: 72),
+                Flash(animate: _lightList.contains(11), delay: Duration(milliseconds: 500), child: Image.asset('assets/images/game_starflare/bulb_down${_lightList.contains(11) ? '_light' : ''}.png', width: 72)),
               ]
             )
           ),
+          
           // 插线
-          SizedBox(
-            height: 540,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _start ? SlideInLeft(child: Image.asset('assets/images/game_starflare/plug_left_long.png', width: MediaQuery.of(context).size.width / 2)) : SlideInLeft(child: Image.asset('assets/images/game_starflare/plug_left.png', width: 100)),
-                _start ? SlideInRight(child: Image.asset('assets/images/game_starflare/plug_right_long.png', width: MediaQuery.of(context).size.width / 2)) : SlideInRight(child: Image.asset('assets/images/game_starflare/plug_right.png', width: 100)),
-              ],
-            )
-          )
+          Positioned(
+            left: 0,
+            child: _start ? FadeInLeftBig(
+              duration: Duration(milliseconds: 800),
+              child: Image.asset('assets/images/game_starflare/plug_left_long.png', width: MediaQuery.of(context).size.width / 2 + 20)
+            ) : SlideInLeft(child: Image.asset('assets/images/game_starflare/plug_left.png', width: 100))
+          ),
+          Positioned(
+            right: 0,
+            child: _start ? FadeInRightBig(
+              duration: Duration(milliseconds: 800),
+              child: Image.asset('assets/images/game_starflare/plug_right_long.png', width: MediaQuery.of(context).size.width / 2)
+            ) : SlideInRight(child: Image.asset('assets/images/game_starflare/plug_right.png', width: 100))
+          ),
         ],
       ),
     );

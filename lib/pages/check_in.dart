@@ -21,7 +21,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
 
   final _scrollControllers = List.generate(3, (_) => ScrollController());
   final List<double> _randomOffsets = [0, 0, 0];
-  final List<int> _randomEndIndex = [0, 0, 0];
+  int _randomEndIndex = 0;
   late AnimationController _animationController;
   final double _itemHeight = 80;
   bool runing = false;
@@ -38,9 +38,9 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollControllers.asMap().forEach((index, controller) {
         controller.animateTo(
-          274 + MediaQuery.of(context).padding.top,
+          354 + MediaQuery.of(context).padding.top,
           duration: Duration(seconds: 1),
-          curve: Curves.easeOut,
+          curve: Curves.bounceIn,
         );
       });
     });
@@ -60,7 +60,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
         randomOffset = getRandom(index);
       }
       setState(() {
-        _randomEndIndex[index] = endIndex % 5;
+        _randomEndIndex = endIndex % 5;
         _randomOffsets[index] = randomOffset;
       });
       return randomOffset;
@@ -84,26 +84,8 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     });
     if (runing || _endingCount <= 3) return;
 
-    int rewardIndex = 0;
-    if (_countRanks().values.any((count) => count == 3)) {
-      rewardIndex = _randomEndIndex[0];
-    } else if (_countRanks().values.any((count) => count == 2)) {
-      if (_randomEndIndex[0] == _randomEndIndex[1]) {
-        rewardIndex = _randomEndIndex[0];
-      } else {
-        rewardIndex = _randomEndIndex[2];
-      }
-    } else {
-      int reward = _randomEndIndex[0];
-      if (_randomEndIndex[1] < reward) {
-        reward = _randomEndIndex[1];
-      } else if (_randomEndIndex[2] < reward) {
-        reward = _randomEndIndex[2];
-      }
-      rewardIndex = reward;
-    }
     int rewardValue = 0;
-    switch(rewardIndex) {
+    switch(_randomEndIndex) {
       case 0: rewardValue = Random().nextInt(51) + 50; break;
       case 1: rewardValue = Random().nextInt(100) + 101; break;
       case 2: rewardValue = Random().nextInt(100) + 201; break;
@@ -111,13 +93,6 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
       case 4: rewardValue = Random().nextInt(200) + 401; break;
     }
     Utils.checkReward(context, rewardValue);
-  }
-  Map _countRanks() {
-    final counts = <int, int>{};
-    for (final rank in _randomEndIndex) {
-      counts[rank] = (counts[rank] ?? 0) + 1;
-    }
-    return counts;
   }
 
 

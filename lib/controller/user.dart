@@ -69,8 +69,7 @@ class UserController extends GetxController {
     ];
   }
   // 领取徽章奖励
-  static onClaimBadgeReward(index, points) {
-    increasePoints(points);
+  static onClaimBadgeReward(index) {
     SharePref.setBool('claimed_$index', true);
     onInitBadge();
   }

@@ -1,8 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starry_luck/common/eventbus.dart';
 import 'package:flutter_starry_luck/controller/user.dart';
+import 'package:flutter_starry_luck/widget/primary_btn.dart';
 import 'package:get/get.dart';
 import '/widget/page_header.dart';
 
@@ -13,7 +15,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   int get _xp => UserController.xp.value;
   int get _xpUp => UserController.xpUp.value;
   
@@ -34,9 +36,43 @@ class HomePageState extends State<HomePage> {
     return Expanded(child: CustomScrollView(slivers: [
       SliverToBoxAdapter(
         child: Column(children: [
-          GestureDetector(
-            onTap: () => Get.toNamed('/check_in'),
-            child: Image.asset('assets/images/bg/keep_checing_in.png')
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 204,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF9747FF), Color(0xFF6112C7)],
+                    stops: [0, 1], // 调整渐变范围
+                  ),
+                  image: DecorationImage(image: AssetImage('assets/images/bg/check_in_mask.png'), fit: BoxFit.cover)
+                ),
+              ),
+              Positioned(right: 0, child: Swing(
+                infinite: true,
+                duration: Duration(seconds: 20),
+                child: Image.asset('assets/images/bg/check_in_cover.png', height: 204)
+              )),
+              Positioned(
+                left: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('KEEP CHECKING IN', style: TextStyle(color: Colors.white, fontSize: 22, fontFamily: 'BlackHanSans')),
+                    Text('Reach the Grand Prize!', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+                    SizedBox(height: 20),
+                    HeartBeat(
+                      infinite: true,
+                      child: PrimaryBtn(radius: 8, text: 'See more', width: 111, height: 40, func: () => Get.toNamed('/check_in'))
+                    )
+                  ],
+                )
+              )
+            ]
           ),
           Container(
             padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).padding.bottom + 58 + 24),
