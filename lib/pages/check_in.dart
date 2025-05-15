@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 class CheckInPage extends StatefulWidget {
   const CheckInPage({super.key});
 
-  @override
+  @override 
   State<CheckInPage> createState() => CheckInPageState();
 }
 
@@ -21,7 +21,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
 
   final _scrollControllers = List.generate(3, (_) => ScrollController());
   final List<double> _randomOffsets = [0, 0, 0];
-  int _randomEndIndex = 0;
+  final List<int> _randomEndIndex = [0, 0, 0];
   late AnimationController _animationController;
   final double _itemHeight = 80;
   bool runing = false;
@@ -68,7 +68,7 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
       randomOffset = getRandom(index);
     }
     setState(() {
-      _randomEndIndex = endIndex % 5;
+      _randomEndIndex[index] = endIndex % 5;
       _randomOffsets[index] = randomOffset;
     });
     return randomOffset;
@@ -84,15 +84,42 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     });
     if (runing || _endingCount <= 3) return;
 
+    int rewardIndex = 0;
+    int rate = 1;
+    if (_countRanks().values.any((count) => count == 3)) {
+      rewardIndex = _randomEndIndex[0];
+      rate = 2;
+    } else if (_countRanks().values.any((count) => count == 2)) {
+      if (_randomEndIndex[0] == _randomEndIndex[1]) {
+        rewardIndex = _randomEndIndex[0];
+      } else {
+        rewardIndex = _randomEndIndex[2];
+      }
+    } else {
+      int reward = _randomEndIndex[0];
+      if (_randomEndIndex[1] < reward) {
+        reward = _randomEndIndex[1];
+      } else if (_randomEndIndex[2] < reward) {
+        reward = _randomEndIndex[2];
+      }
+      rewardIndex = reward;
+    }
     int rewardValue = 0;
-    switch(_randomEndIndex) {
-      case 0: rewardValue = Random().nextInt(51) + 50; break;
-      case 1: rewardValue = Random().nextInt(100) + 101; break;
-      case 2: rewardValue = Random().nextInt(100) + 201; break;
-      case 3: rewardValue = Random().nextInt(100) + 301; break;
-      case 4: rewardValue = Random().nextInt(200) + 401; break;
+    switch(rewardIndex) {
+      case 4: rewardValue = (Random().nextInt(51) + 50) * rate; break;
+      case 3: rewardValue = (Random().nextInt(100) + 101) * rate; break;
+      case 2: rewardValue = (Random().nextInt(100) + 201) * rate; break;
+      case 1: rewardValue = (Random().nextInt(100) + 301) * rate; break;
+      case 0: rewardValue = (Random().nextInt(200) + 401) * rate; break;
     }
     Utils.checkReward(context, rewardValue);
+  }
+  Map _countRanks() {
+    final counts = <int, int>{};
+    for (final rank in _randomEndIndex) {
+      counts[rank] = (counts[rank] ?? 0) + 1;
+    }
+    return counts;
   }
 
 

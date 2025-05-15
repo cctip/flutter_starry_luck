@@ -58,17 +58,17 @@ class SettingsState extends State<Settings> {
       child: Column(
         children: [
           linkItem('Contact us', (){
-            Utils.toast(context, message: 'mejasenigroup@gmail.com');
+            Utils.toast(context, message: 'regaliarage@gmail.com');
           }),
           SizedBox(height: 8),
-          linkItem('Rate us', (){}),
+          // linkItem('Rate us', (){}),
           SizedBox(height: 40),
           linkItem('Privacy policy', (){
-            launchUrl(Uri.parse(''));
+            launchUrl(Uri.parse('https://sites.google.com/view/starryluckk/privacy-policy'));
           }),
           SizedBox(height: 8),
           linkItem('Terms of service', (){
-            launchUrl(Uri.parse(''));
+            launchUrl(Uri.parse('https://sites.google.com/view/script-canvas/terms-and-conditions'));
           }),
           Spacer(),
           Text('v 1.0.0', style: TextStyle(color: Colors.white30),)
