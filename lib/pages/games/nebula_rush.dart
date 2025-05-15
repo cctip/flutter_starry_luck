@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:math';
 
@@ -18,12 +18,16 @@ class NebulaRush extends StatefulWidget {
 
 class NebulaRushState extends State<NebulaRush> {
   final int _startFee = 200; // 游戏开始花费
+  bool _wobble = false;
   bool _start = false;
+  bool _playable = false;
   final List _dealerList = [];
   final List _playerList = [];
-  bool _dealerStand = false;
-  bool _playerStand = false;
+  bool _dealerStand = false; // 庄家stand
+  bool _playerStand = false; // 玩家stand
   bool _someoneBurst = false; // 有人爆牌
+  String _toastText = '';
+  bool _showToast = false; // 普通提示显隐
   bool _burstToast = false; // 爆牌提示显隐
   bool _resultToast = false; // 结果提示显隐
   String _result = ''; // 结果
@@ -32,17 +36,26 @@ class NebulaRushState extends State<NebulaRush> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() => _wobble = true);
+    });
+    Future.delayed(Duration(milliseconds: 2000), () {
+      setState(() => _wobble = false);
+    });
   }
 
   // 重置游戏
   _onResetGame() {
     setState(() {
+      _wobble = true;
       _start = false;
+      _playable = false;
       _dealerList.clear();
       _playerList.clear();
       _dealerStand = false;
       _playerStand = false;
       _someoneBurst = false;
+      _showToast = false;
       _burstToast = false;
       _resultToast = false;
       _result = '';
@@ -60,6 +73,12 @@ class NebulaRushState extends State<NebulaRush> {
       _addDealerPoker(500);
       _addPlayerPoker(0);
       _addPlayerPoker(500);
+      Future.delayed(Duration(milliseconds: 1000), () {
+        _onToast('Player First');
+        Future.delayed(Duration(milliseconds: 2000), () {
+          setState(() => _playable = true);
+        });
+      });
     } else {
       Utils.toast(context, message: 'Insufficient points');
     }
@@ -88,8 +107,13 @@ class NebulaRushState extends State<NebulaRush> {
         }
       });
     } else {
-      setState(() => _dealerStand = true);
-      if (_playerStand) _gameOver();
+      Future.delayed(Duration(milliseconds: 1000), () {
+        _onToast('Dealer Stand');
+        Future.delayed(Duration(milliseconds: 2000), () {
+          setState(() => _dealerStand = true);
+          if (_playerStand) _gameOver();
+        });
+      });
     }
   }
   // 给自己发牌
@@ -135,12 +159,20 @@ class NebulaRushState extends State<NebulaRush> {
     setState(() {
       _playerStand = true;
     });
-    if (_calcListPoint(_dealerList) < 18) {
-      _dealerAuto(1000);
-    } else {
-      setState(() => _dealerStand = true);
-      if (_playerStand) _gameOver();
-    }
+    _onToast("Dealer's Time");
+    Future.delayed(Duration(milliseconds: 2000), () {
+      if (_calcListPoint(_dealerList) < 18) {
+        _dealerAuto(2000);
+      } else {
+        Future.delayed(Duration(milliseconds: 1000), () {
+          _onToast('Dealer Stand');
+          Future.delayed(Duration(milliseconds: 2000), () {
+            setState(() => _dealerStand = true);
+            if (_playerStand) _gameOver();
+          });
+        });
+      }
+    });
   }
   
   // 爆牌弹窗提示
@@ -154,10 +186,10 @@ class NebulaRushState extends State<NebulaRush> {
         _dealerStand = true;
         _playerStand = true;
       });
-    });
-    Future.delayed(Duration(milliseconds: 2000), () {
-      setState(() => _burstToast = false);
-      _gameOver();
+      Future.delayed(Duration(milliseconds: 2000), () {
+        setState(() => _burstToast = false);
+        _gameOver();
+      });
     });
   }
   // 游戏结束
@@ -197,7 +229,7 @@ class NebulaRushState extends State<NebulaRush> {
   }
   // 奖励弹窗
   _showReword() {
-    Future.delayed(Duration(milliseconds: 1000), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       if (_result == 'win') {
         GameController.winGame('nr');
         Utils.gameSuccess(context, point: 350, xp: 125, callback: _onResetGame);
@@ -226,6 +258,17 @@ class NebulaRushState extends State<NebulaRush> {
     return { 'suit': suit, 'face': face, 'color': color };
   }
 
+  // 提示弹窗
+  _onToast(String text) {
+    setState(() {
+      _toastText = text;
+      _showToast = true;
+    });
+    Future.delayed(Duration(milliseconds: 2000), () {
+      setState(() => _showToast = false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -250,7 +293,7 @@ class NebulaRushState extends State<NebulaRush> {
         ZoomIn(child: Image.asset('assets/images/game_nebula_rush/table.png')),
         Positioned(
           top: 70 * MediaQuery.of(context).size.width / 402,
-          child: FlipInY(child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcListPoint(_dealerList) : _dealerList.isEmpty ? 0 : _dealerList[0] % 13 + 1))
+          child: FlipInY(child: PersonBox(name: 'Dealer', point: _dealerStand && _playerStand ? _calcListPoint(_dealerList) : _dealerList.isEmpty ? 0 : _calcListPoint([_dealerList[0]])))
         ),
         Positioned(
           bottom: 110 * MediaQuery.of(context).size.width / 402,
@@ -268,32 +311,40 @@ class NebulaRushState extends State<NebulaRush> {
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: List.generate(_dealerList.length, (index) => FadeInRight(
+                  children: List.generate(_dealerList.length, (index) => SlideInUp(
                     child: index == 0 ?
                       CardItem(_dealerList[index])
                       : _dealerStand && _playerStand ? FlipInY(child: CardItem(_dealerList[index])) : Image.asset('assets/icons/poker_back.png', width: 42)
                   )),
                 ),
-                !_start ? Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Positioned(left: -24, child: Image.asset('assets/icons/poker_back.png', width: 42)),
-                    Positioned(left: -12, child: Image.asset('assets/icons/poker_back.png', width: 42)),
-                    Image.asset('assets/icons/poker_back.png', width: 42),
-                    Positioned(left: 12, child: Image.asset('assets/icons/poker_back.png', width: 42)),
-                    Positioned(left: 24, child: Image.asset('assets/icons/poker_back.png', width: 42)),
-                  ]
-                ) : Container(),
+                CardGroup(),
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: List.generate(_playerList.length, (index) => FadeInRight(child: CardItem(_playerList[index]))),
+                  children: List.generate(_playerList.length, (index) => SlideInDown(child: CardItem(_playerList[index]))),
                 ),
               ]
             ),
           ))
         ),
         
+
+        // 提示
+        Positioned(
+          top: MediaQuery.of(context).size.width / 402 * 310 - 60,
+          child: FlipInX(
+            animate: _showToast,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width / 370 * 60,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage('assets/images/game_nebula_rush/toast_bg.png'), fit: BoxFit.cover)
+              ),
+              child: Text(_toastText, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700))
+            )
+          )
+        ),
         // 爆牌
         _burstToast ? Positioned(
           top: MediaQuery.of(context).size.width / 402 * 310 - 60,
@@ -336,6 +387,23 @@ class NebulaRushState extends State<NebulaRush> {
       ]),
     );
   }
+  Widget CardGroup() {
+    return SizedBox(
+      width: 42,
+      height: 63,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: List.generate(54, (index) => Positioned(
+          left: 0.1 * (index - 27),
+          bottom: 0.05 * (index - 27),
+          child: _wobble ? Wobble(
+            delay: Duration(milliseconds: 4 * index),
+            child: Image.asset('assets/icons/poker_back.png', width: 42)
+          ) : Image.asset('assets/icons/poker_back.png', width: 42)
+        ))
+      ),
+    );
+  }
   Widget CardItem(val) {
     var info = _calcFace(val);
     return Container(
@@ -360,9 +428,9 @@ class NebulaRushState extends State<NebulaRush> {
     return Container(
       padding: EdgeInsets.all(16),
       child: _start ? Row(children: [
-        GradientBtn(text: 'Stand', colors: [Color(0xFF2BB100), Color(0xFF74EA4E)], func: _playerStand || _someoneBurst ? null : _onStand),
+        GradientBtn(text: 'Stand', colors: [Color(0xFF2BB100), Color(0xFF74EA4E)], func: !_playable || _playerStand || _someoneBurst ? null : _onStand),
         SizedBox(width: 16),
-        GradientBtn(text: 'Hit', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _playerStand || _someoneBurst ? null : () {
+        GradientBtn(text: 'Hit', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: !_playable || _playerStand || _someoneBurst ? null : () {
           _addPlayerPoker(0);
         }),
       ]) : Row(children: [GradientBtn(text: 'Start Game ($_startFee)', colors: [Color(0xFFFF8743), Color(0xFFFFAA1C)], func: _onStart)]),

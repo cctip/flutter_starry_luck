@@ -52,19 +52,6 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
     _animationController.reset();
     setState(() => runing = true);
 
-    // 递归随机数生成
-    getRandom(index) {
-      int endIndex = (Random().nextInt(20) + 5);
-      double randomOffset = endIndex * _itemHeight * 6 - 46 + MediaQuery.of(context).padding.top; // 保证完整滚动圈数
-      if (randomOffset > _randomOffsets[index] - 1000 && randomOffset < _randomOffsets[index] + 1000) {
-        randomOffset = getRandom(index);
-      }
-      setState(() {
-        _randomEndIndex = endIndex % 5;
-        _randomOffsets[index] = randomOffset;
-      });
-      return randomOffset;
-    }
     _scrollControllers.asMap().forEach((index, controller) {
       controller.animateTo(
         getRandom(index),
@@ -72,6 +59,19 @@ class CheckInPageState extends State<CheckInPage> with SingleTickerProviderState
         curve: Curves.easeOutQuart,
       );
     });
+  }
+  // 递归随机数生成
+  getRandom(index) {
+    int endIndex = (Random().nextInt(20) + 5);
+    double randomOffset = endIndex * _itemHeight * 6 - 46 + MediaQuery.of(context).padding.top; // 保证完整滚动圈数
+    if (randomOffset > _randomOffsets[index] - 1000 && randomOffset < _randomOffsets[index] + 1000) {
+      randomOffset = getRandom(index);
+    }
+    setState(() {
+      _randomEndIndex = endIndex % 5;
+      _randomOffsets[index] = randomOffset;
+    });
+    return randomOffset;
   }
 
   // 结束抽奖

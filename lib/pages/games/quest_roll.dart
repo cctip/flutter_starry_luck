@@ -20,6 +20,7 @@ class QuestRoll extends StatefulWidget {
 class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixin {
   final int _startFee = 100; // 游戏开始花费
   bool _start = false;
+  bool _roulette = false;
   final List _guessList = [7, 8, 9];
   int _guessValue = 0;
   int _numberLeft = 0;
@@ -29,6 +30,7 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
   _onResetGame() {
     setState(() {
       _start = false;
+      _roulette = false;
       _guessValue = 0;
       _numberLeft = 0;
       _numberRight = 0;
@@ -48,27 +50,33 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
       if (_start) return;
       setState(() {
         _start = true;
-        _numberLeft = Random().nextInt(6) + 1;
-        _numberRight = Random().nextInt(6) + 1;
+        _roulette = true;
       });
 
-      if (_numberLeft + _numberRight == _guessValue) {
-        int successPoint = 0;
-        switch(_guessValue) {
-          case 7: successPoint = 160; break;
-          case 8: successPoint = 200; break;
-          case 9: successPoint = 250; break;
+      Future.delayed(Duration(milliseconds: 1000), () {
+        setState(() {
+          _numberLeft = Random().nextInt(6) + 1;
+          _numberRight = Random().nextInt(6) + 1;
+        });
+
+        if (_numberLeft + _numberRight == _guessValue) {
+          int successPoint = 0;
+          switch(_guessValue) {
+            case 7: successPoint = 160; break;
+            case 8: successPoint = 200; break;
+            case 9: successPoint = 250; break;
+          }
+          Future.delayed(Duration(milliseconds: 1000), () {
+            GameController.winGame('qr');
+            Utils.gameSuccess(context, point: successPoint, xp: 75, callback: _onResetGame);
+          });
+        } else {
+          Future.delayed(Duration(milliseconds: 1000), () {
+            GameController.calcGameTime();
+            Utils.gameFailed(context, xp: 30, callback: _onResetGame);
+          });
         }
-        Future.delayed(Duration(milliseconds: 1000), () {
-          GameController.winGame('qr');
-          Utils.gameSuccess(context, point: successPoint, xp: 75, callback: _onResetGame);
-        });
-      } else {
-        Future.delayed(Duration(milliseconds: 1000), () {
-          GameController.calcGameTime();
-          Utils.gameFailed(context, xp: 30, callback: _onResetGame);
-        });
-      }
+      });
     } else {
       Utils.toast(context, message: 'Insufficient points');
     }
@@ -95,7 +103,7 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
       alignment: Alignment.center,
       children: [
         Opacity(opacity: 0.4, child: Image.asset('assets/images/game_quest_roll/bg.png', fit: BoxFit.cover)),
-        _start ? Positioned(child: Row(
+        _numberLeft != 0 ? Positioned(child: Row(
           spacing: 50,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -118,7 +126,20 @@ class QuestRollState extends State<QuestRoll> with SingleTickerProviderStateMixi
               child: _buildDots(_numberRight),
             )),
           ],
-        )) : BounceInDown(child: Positioned(child: Image.asset('assets/images/game_quest_roll/dice_group.png', height: 120))),
+        )) : Row(
+          spacing: 30,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Roulette(
+              animate: _roulette,
+              child: BounceInDown(child: Positioned(child: Image.asset('assets/images/game_quest_roll/dice_1.png', height: 120)))
+            ),
+            Roulette(
+              animate: _roulette,
+              child: BounceInDown(child: Positioned(child: Image.asset('assets/images/game_quest_roll/dice_2.png', height: 120)))
+            ),
+          ],
+        ),
       ],
     );
   }

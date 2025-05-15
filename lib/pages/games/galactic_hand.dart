@@ -57,17 +57,17 @@ class GalacticHandState extends State<GalacticHand> {
   // 发牌
   _deal() {
     if (_cardList.length >= 5) return;
-    int cardNumber() {
-      int val = Random().nextInt(52);
-      if (_cardList.contains(val)) return cardNumber();
-      return val;
-    }
     setState(() {
       _cardList.add(cardNumber());
     });
     if (_cardList.length > 2) {
       setState(() => _guessLocked = true);
     }
+  }
+  int cardNumber() {
+    int val = Random().nextInt(52);
+    if (_cardList.contains(val)) return cardNumber();
+    return val;
   }
   // 计算牌面
   _calcFace(index) {

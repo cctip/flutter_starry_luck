@@ -18,24 +18,27 @@ class DetailHeaderState extends State<DetailHeader> {
     showDialog(
       context: context,
       useSafeArea: false,
-      builder: (_) => SlideInUp(child: Container(
-        alignment: Alignment.bottomCenter,
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 64),
-            decoration: BoxDecoration(
-              color: Color(0xFF212121),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
-            ),
-            child: Column(
-              children: [
-                Image.asset('assets/images/rules/slider.png'),
-                Image.asset('assets/images/rules/${widget.rule}.png'),
-              ],
+      builder: (_) => FadeInUpBig(
+        duration: Duration(milliseconds: 200),
+        child: Container(
+          alignment: Alignment.bottomCenter,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 64),
+              decoration: BoxDecoration(
+                color: Color(0xFF212121),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
+              ),
+              child: Column(
+                children: [
+                  Image.asset('assets/images/rules/slider.png'),
+                  Image.asset('assets/images/rules/${widget.rule}.png'),
+                ],
+              ),
             ),
           ),
-        ),
-      ))
+        )
+      )
     );
   }
 
