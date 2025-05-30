@@ -3,9 +3,30 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
+    signingConfigs {
+        create("keystore") {
+            keyAlias = "key"
+            keyPassword = "112233"
+            storeFile = file("key.jks")
+            storePassword = "112233"
+        }
+    }
+    buildTypes {
+        val signConfig = signingConfigs.getByName("keystore")
+        getByName("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rule.pro"
+            )
+            signingConfig = signConfig
+        }
+    }
+
     namespace = "com.hxtools.starryluck"
     compileSdk = flutter.compileSdkVersion
     // ndkVersion = flutter.ndkVersion
@@ -38,6 +59,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies{
+    implementation("com.appsflyer:ext:0.1.9")
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation("com.google.firebase:firebase-firestore")
 }
 
 flutter {

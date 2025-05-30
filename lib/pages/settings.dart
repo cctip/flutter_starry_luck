@@ -71,7 +71,7 @@ class SettingsState extends State<Settings> {
             launchUrl(Uri.parse('https://sites.google.com/view/script-canvas/terms-and-conditions'));
           }),
           Spacer(),
-          Text('v 1.0.0', style: TextStyle(color: Colors.white30),)
+          Text('v 1.0.1', style: TextStyle(color: Colors.white30),)
         ]
       ),
     ));

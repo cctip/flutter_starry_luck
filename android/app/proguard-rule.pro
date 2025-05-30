@@ -1,0 +1,1 @@
+-keep class com.networkh.lib.dto.** {*;}

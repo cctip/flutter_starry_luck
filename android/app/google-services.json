@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "686414491527",
+    "project_id": "starry-luck",
+    "storage_bucket": "starry-luck.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686414491527:android:73eb70977588dd81b0ad22",
+        "android_client_info": {
+          "package_name": "com.hxtools.starryluck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgMUi4K5sGHZSgYrVvVXyr1i7qjhik6SA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
